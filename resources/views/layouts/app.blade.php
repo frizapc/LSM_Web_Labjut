@@ -26,7 +26,10 @@
             flex-direction: column;
             padding-top: 56px;
         }
-
+        
+        .title-purple {
+            color: var(--purple-primary) !important;
+        }
 
         .bg-purple {
             background-color: var(--purple-primary) !important;
