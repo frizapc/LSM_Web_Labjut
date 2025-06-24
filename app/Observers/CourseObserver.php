@@ -4,6 +4,7 @@ namespace App\Observers;
 
 use App\Models\Course;
 use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Str;
 
 class CourseObserver
@@ -17,29 +18,17 @@ class CourseObserver
         $course->photo = $course->photo->store('courses');
     }
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-    
     /**
-     * Handle the Course "updated" event.
+     * Handle the Course "updating" event.
      */
-    public function updated(Course $course): void
+    public function updating(Course $course): void
     {
-        //
+        if ($course->photo) {
+            Storage::delete($course->getOriginal('photo'));
+            $course->photo = $course->photo->store('courses');
+        } else {
+            $course->photo = $course->getOriginal('photo');
+        }
     }
 
     /**
