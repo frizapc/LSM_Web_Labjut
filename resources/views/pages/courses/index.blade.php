@@ -32,10 +32,8 @@
                                 </span>
                             </div>
                             <div class="card-body">
-                                <h5 class="card-title text-purple">
-                                    <a href="{{ route('courses.show', $course->id) }}" class="text-decoration-none text-purple stretched-link">
-                                        {{ $course->name }}
-                                    </a>
+                                <h5 class="card-title title-purple">
+                                    {{ $course->name }}
                                 </h5>
                             </div>
                             <div class="card-footer bg-transparent">
