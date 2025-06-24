@@ -123,7 +123,7 @@
         }
 
         .pagination .page-link {
-            color: #6a0dad;
+            color:rgb(8, 8, 8);
         }
         @media (max-width: 768px) {
             .sidebar {
