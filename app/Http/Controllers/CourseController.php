@@ -59,7 +59,8 @@ class CourseController extends Controller
      */
     public function edit(string $id)
     {
-        //
+        $course = Course::findOrFail($id);
+        return view('pages.courses.edit', compact('course'));
     }
 
     /**
@@ -67,7 +68,22 @@ class CourseController extends Controller
      */
     public function update(Request $request, string $id)
     {
-        //
+        $course = Course::findOrFail($id);
+
+        $request->validate([
+            'name' => 'required|string|max:50|unique:courses,name,'.$course->id,
+            'level' => 'required|string',
+            'photo' => 'nullable|image|file|max:1024'
+        ]);
+         
+        $course->update([
+            'name' => $request->name,
+            'level' => $request->level,
+            'photo' => $request->file('photo'),
+        ]);
+        
+        return redirect()->route('courses.index')
+            ->with('success', 'Kursus berhasil diperbarui!');
     }
 
     /**
