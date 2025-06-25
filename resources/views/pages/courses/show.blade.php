@@ -154,6 +154,83 @@
             </div>
         </div>
     </div>
+    <div class="row mt-4">
+        <div class="col-12">
+            <div class="card shadow border-0">
+                <div class="card-header bg-purple text-white d-flex justify-content-between align-items-center">
+                    <h5 class="mb-0">
+                        <i class="bi bi-journal-bookmark me-2"></i>Materi Kursus
+                    </h5>
+                    <a href="{{ route('courses.materials.create', $course->id) }}" class="btn btn-sm btn-light-purple">
+                        <i class="bi bi-plus-circle me-1"></i> Tambah Materi
+                    </a>
+                </div>
+                <div class="card-body">
+                    @if($course->materials->isEmpty())
+                        <div class="text-center py-4">
+                            <i class="bi bi-journal-x text-purple" style="font-size: 3rem;"></i>
+                            <h5 class="text-purple mt-3">Belum ada materi tersedia</h5>
+                        </div>
+                    @else
+                        <div class="table-responsive">
+                            <table class="table table-hover">
+                                <thead>
+                                    <tr>
+                                        <th class="text-purple">#</th>
+                                        <th class="text-purple">Nama Materi</th>
+                                        <th class="text-purple">Deskripsi</th>
+                                        <th class="text-purple">Ditambahkan</th>
+                                        <th class="text-purple">Aksi</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    @foreach($course->materials as $index => $material)
+                                    <tr>
+                                        <td>{{ $index + 1 }}</td>
+                                        <td>
+                                            <strong>{{ $material->name }}</strong>
+                                        </td>
+                                        <td>
+                                            {{ Str::limit($material->description, 50) }}
+                                        </td>
+                                        <td>
+                                            <small class="text-muted">
+                                                <i class="bi bi-clock me-1"></i>
+                                                {{ $material->created_at->diffForHumans() }}
+                                            </small>
+                                        </td>
+                                        <td>
+                                            <div class="d-flex gap-2">
+                                                <a href="{{ Storage::url($material->source) }}" 
+                                                target="_blank"
+                                                class="btn btn-sm btn-outline-purple"
+                                                data-bs-toggle="tooltip" 
+                                                title="Baca Materi">
+                                                    <i class="bi bi-file-earmark-pdf"></i>
+                                                </a>
+                                                <form action="{{ route('courses.materials.destroy', [$course->id, $material->id]) }}" method="POST">
+                                                    @csrf
+                                                    @method('DELETE')
+                                                    <button type="submit" 
+                                                            class="btn btn-sm btn-outline-danger"
+                                                            data-bs-toggle="tooltip"
+                                                            title="Hapus Materi"
+                                                            onclick="return confirm('Hapus materi {{ $material->name }}?')">
+                                                        <i class="bi bi-trash"></i>
+                                                    </button>
+                                                </form>
+                                            </div>
+                                        </td>
+                                    </tr>
+                                    @endforeach
+                                </tbody>
+                            </table>
+                        </div>
+                    @endif
+                </div>
+            </div>
+        </div>
+    </div>
 </div>
 
 <style>
@@ -178,5 +255,15 @@
     .progress {
         background-color: rgba(106, 13, 173, 0.2);
     }
+    
 </style>
+@endsection
+
+@section('scripts')
+<script>
+    // Inisialisasi tooltip
+    $(document).ready(function(){
+        $('[data-bs-toggle="tooltip"]').tooltip();
+    });
+</script>
 @endsection

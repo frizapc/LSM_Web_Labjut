@@ -3,7 +3,9 @@
 namespace App\Providers;
 
 use App\Models\Course;
+use App\Models\Material;
 use App\Observers\CourseObserver;
+use App\Observers\MaterialObserver;
 use Carbon\Carbon;
 use Illuminate\Pagination\Paginator;
 use Illuminate\Support\ServiceProvider;
@@ -25,6 +27,7 @@ class AppServiceProvider extends ServiceProvider
     {
         Paginator::useBootstrapFive();
         Course::observe(CourseObserver::class);
+        Material::observe(MaterialObserver::class);
         Carbon::setLocale('id');
     }
 }

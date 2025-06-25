@@ -3,6 +3,7 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 
 class Course extends Model
 {
@@ -10,4 +11,9 @@ class Course extends Model
     protected $primaryKey = 'id';
     protected $fillable = ['name', 'level', 'photo', 'code'];
     public $timestamps = true;
+
+    public function materials(): HasMany
+    {
+        return $this->hasMany(Material::class);
+    }
 }
