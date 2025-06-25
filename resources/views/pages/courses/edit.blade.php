@@ -5,10 +5,11 @@
 @section('content')
 <div class="container-fluid py-4">
     <div class="card shadow border-0">
-        <div class="card-header bg-purple text-white">
+        <div class="card-header bg-purple text-white d-flex justify-content-between align-items-center">
             <h5 class="mb-0">
-                <i class="bi bi-pencil-square me-2"></i>Edit Kursus <span class="badge bg-light text-dark">{{ $course->code }}</span>
+                <i class="bi bi-pencil-square me-2"></i>Edit Kursus
             </h5>
+            <span class="badge bg-light fs-6 text-dark">{{ $course->code }}</span>
         </div>
         
         <div class="card-body">
@@ -64,7 +65,7 @@
                 </div>
                 
                 <div class="d-flex justify-content-end">
-                    <a href="{{ route('courses.index') }}" class="btn btn-outline-purple me-2">
+                    <a href="{{ route('courses.show', $course->id) }}" class="btn btn-outline-purple me-2">
                         <i class="bi bi-arrow-left me-1"></i> Kembali
                     </a>
                     <button type="submit" class="btn btn-purple">

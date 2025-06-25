@@ -51,7 +51,8 @@ class CourseController extends Controller
      */
     public function show(string $id)
     {
-        //
+        $course = Course::findOrFail($id);
+        return view('pages.courses.show', compact('course'));
     }
 
     /**
@@ -82,7 +83,8 @@ class CourseController extends Controller
             'photo' => $request->file('photo'),
         ]);
         
-        return redirect()->route('courses.index')
+        return redirect()
+            ->route('courses.show', $course->id)
             ->with('success', 'Kursus berhasil diperbarui!');
     }
 
@@ -91,6 +93,10 @@ class CourseController extends Controller
      */
     public function destroy(string $id)
     {
-        //
+        $course = Course::findOrFail($id);
+        $course->delete();
+        return redirect()
+            ->route('courses.index')
+            ->with('success', 'Kursus berhasil dihapus');
     }
 }

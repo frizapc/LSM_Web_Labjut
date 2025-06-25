@@ -4,6 +4,14 @@
 
 @section('content')
 <div class="container-fluid py-4">
+    @if(session('success'))
+        <div class="alert alert-success alert-dismissible fade show" role="alert">
+            <i class="bi bi-check-circle-fill me-2"></i>
+            {{ session('success') }}
+            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+        </div>
+    @endif
+
     <div class="card shadow border-0">
         <div class="card-header bg-purple text-white">
             <div class="d-flex justify-content-between align-items-center">
@@ -58,4 +66,6 @@
         </div>
     </div>
 </div>
+
+
 @endsection

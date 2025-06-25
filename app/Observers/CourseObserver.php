@@ -32,11 +32,11 @@ class CourseObserver
     }
 
     /**
-     * Handle the Course "deleted" event.
+     * Handle the Course "deleting" event.
      */
-    public function deleted(Course $course): void
+    public function deleting(Course $course): void
     {
-        //
+        Storage::delete($course->photo);
     }
 
     /**
