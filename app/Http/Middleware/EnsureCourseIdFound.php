@@ -16,7 +16,7 @@ class EnsureCourseIdFound
      */
     public function handle(Request $request, Closure $next): Response
     {
-        Course::findOrFail($request->course);
+        $request->course = Course::findOrFail($request->course);
         return $next($request);
     }
 }

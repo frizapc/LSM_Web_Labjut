@@ -16,7 +16,7 @@
                 @csrf
                 
                 <div class="row mb-3">
-                    <div class="col-md-6">
+                    <div class="col">
                         <label for="name" class="form-label text-purple">Nama Materi</label>
                         <input type="text" class="form-control border-purple @error('name') is-invalid @enderror" 
                                id="name" name="name" value="{{ old('name') }}">
@@ -43,12 +43,12 @@
                         <div class="invalid-feedback">{{ $message }}</div>
                     @enderror
                     <div class="mt-3">
-                        <iframe id="pdf-preview" src="#" class="w-100 d-none" style="height: 300px; border: 1px solid #dee2e6;"></iframe>
+                        <iframe id="pdf-preview" src="#" class="w-100 d-none" style="height: 500px; border: 1px solid #dee2e6;"></iframe>
                     </div>
                 </div>
                 
                 <div class="d-flex justify-content-end mt-3">
-                    <a href="{{ route('courses.materials.index', $course->id) }}" class="btn btn-outline-purple me-2">
+                    <a href="{{ route('courses.show', $course->id) }}" class="btn btn-outline-purple me-2">
                         <i class="bi bi-arrow-left me-1"></i> Kembali
                     </a>
                     <button type="submit" class="btn btn-purple">

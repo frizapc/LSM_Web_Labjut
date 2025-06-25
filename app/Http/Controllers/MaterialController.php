@@ -2,7 +2,7 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\Course;
+use App\Models\Material;
 use Illuminate\Http\Request;
 
 class MaterialController extends Controller
@@ -18,10 +18,11 @@ class MaterialController extends Controller
     /**
      * Show the form for creating a new resource.
      */
-    public function create($course)
+    public function create(Request $request)
     {
-        $course = Course::findOrFail($course);
-        return view('pages.materials.create', compact('course'));
+        return view('pages.materials.create', [
+            'course' => $request->course,
+        ]);
     }
 
     /**
@@ -29,7 +30,22 @@ class MaterialController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        $request->validate([
+            'name' => 'required|string|max:50',
+            'description' => 'required|string',
+            'source' => 'required|file|mimes:pdf|max:1024'
+        ]);
+
+        Material::create([
+            'name' => $request->name,
+            'description' => $request->description,
+            'source' => $request->file('source'),
+            'course_id' => $request->course->id,
+        ]);
+
+        return redirect()
+            ->route('courses.show', $request->course->id)
+            ->with('success', 'Materi baru berhasil ditambahkan!');
     }
 
     /**
