@@ -9,7 +9,8 @@
         "php": "^8.2",
         "laravel/framework": "^11.31",
         "laravel/tinker": "^2.9",
-        "twbs/bootstrap": "5.3.7"
+        "twbs/bootstrap": "5.3.7",
+        "twbs/bootstrap-icons": "^1.13"
     },
     "require-dev": {
         "fakerphp/faker": "^1.23",

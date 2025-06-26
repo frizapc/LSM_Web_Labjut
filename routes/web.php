@@ -10,4 +10,5 @@ Route::get('/', function () {
 
 Route::resource('courses', CourseController::class);
 Route::resource('courses.materials', MaterialController::class)
-    ->middleware('EnsureCourseIdFound');
+    ->middleware('EnsureCourseIdFound')
+    ->middlewareFor('destroy', 'EnsureMaterialIdFound');

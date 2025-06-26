@@ -24,11 +24,11 @@ class MaterialObserver
     }
 
     /**
-     * Handle the Material "deleted" event.
+     * Handle the Material "deleting" event.
      */
-    public function deleted(Material $material): void
+    public function deleting(Material $material): void
     {
-        //
+        Storage::delete($material->source);
     }
 
     /**
