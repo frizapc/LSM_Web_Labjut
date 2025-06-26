@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Course;
 use App\Models\Material;
 use Illuminate\Http\Request;
 
@@ -18,18 +19,21 @@ class MaterialController extends Controller
     /**
      * Show the form for creating a new resource.
      */
-    public function create(Request $request)
+    public function create(Request $request, $courseId)
     {
+        $course = Course::findOrFail($courseId);
         return view('pages.materials.create', [
-            'course' => $request->course,
+            'course' => $course,
         ]);
     }
 
     /**
      * Store a newly created resource in storage.
      */
-    public function store(Request $request)
+    public function store(Request $request, $courseId)
     {
+        Course::findOrFail($courseId);
+
         $request->validate([
             'name' => 'required|string|max:50',
             'description' => 'required|string',
@@ -40,11 +44,11 @@ class MaterialController extends Controller
             'name' => $request->name,
             'description' => $request->description,
             'source' => $request->file('source'),
-            'course_id' => $request->course->id,
+            'course_id' => $courseId,
         ]);
 
         return redirect()
-            ->route('courses.show', $request->course->id)
+            ->route('courses.show', $courseId)
             ->with('success', 'Materi baru berhasil ditambahkan!');
     }
 
@@ -75,12 +79,15 @@ class MaterialController extends Controller
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(Request $request, string $course, $material)
+    public function destroy(string $courseId, $materialId)
     {
-        $material = Material::findOrFail($material);
-        $material->delete();
+        $course = Course::findOrFail($courseId);
+        $material = Material::whereBelongsTo($course)
+            ->findOrFail($materialId);
+        $material
+            ->delete();
         return redirect()
-            ->route('courses.show', $request->course->id)
+            ->route('courses.show', $courseId)
             ->with('success', 'Materi berhasil dihapus!');
     }
 }

@@ -15,7 +15,7 @@
             </a>
         </li>
         <li class="nav-item">
-            <a class="nav-link" href="#">
+            <a class="nav-link" href="/courses">
                 <i class="bi bi-box-seam me-2"></i> Kursus
             </a>
         </li>
