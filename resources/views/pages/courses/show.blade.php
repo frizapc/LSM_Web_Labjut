@@ -140,7 +140,7 @@
             <div class="card shadow border-0">
                 <div class="card-header bg-purple text-white">
                     <h5 class="mb-0">
-                        <i class="bi bi-journal-text me-2"></i>Deskripsi
+                        <i class="bi bi-journal-text me-2"></i>Deskripsi Kursus
                     </h5>
                 </div>
                 <div class="card-body">
@@ -191,7 +191,7 @@
                                             <strong>{{ $material->name }}</strong>
                                         </td>
                                         <td>
-                                            {{ Str::limit($material->description, 50) }}
+                                            {{ $material->description }}
                                         </td>
                                         <td>
                                             <small class="text-muted">

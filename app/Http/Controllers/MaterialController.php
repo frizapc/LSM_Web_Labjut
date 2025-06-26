@@ -12,7 +12,7 @@ class MaterialController extends Controller
      */
     public function index()
     {
-        return 1;
+        //
     }
 
     /**
@@ -75,8 +75,12 @@ class MaterialController extends Controller
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(string $id)
+    public function destroy(Request $request, string $course, $material)
     {
-        //
+        $material = Material::findOrFail($material);
+        $material->delete();
+        return redirect()
+            ->route('courses.show', $request->course->id)
+            ->with('success', 'Materi berhasil dihapus!');
     }
 }

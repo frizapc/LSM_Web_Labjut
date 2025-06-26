@@ -8,6 +8,9 @@
     <!-- Bootstrap CSS -->
     <link href="{{ asset('css/bootstrap.min.css') }}" rel="stylesheet">
     
+    <!-- Bootstrap Icons -->
+    <link href="{{ asset('icons/bootstrap-icons.min.css') }}" rel="stylesheet">
+    
     <!-- Custom CSS -->
     <style>
         :root {

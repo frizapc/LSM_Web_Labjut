@@ -4,7 +4,7 @@
 
 @section('content')
 <div class="container-fluid py-4">
-    <div class="card shadow border-0" style="height: 500px; overflow-y: auto;">
+    <div class="card shadow border-0" style="min-height: 500px; overflow-y: auto;">
         <div class="card-header bg-purple text-white">
             <h5 class="mb-0">
                 <i class="bi bi-plus-circle me-2"></i>Tambah Materi {{ $course->name }}
