@@ -4,7 +4,7 @@
 
 @section('content')
 <div class="container-fluid py-4">
-    <div class="card shadow border-0" style="min-height: 500px; overflow-y: auto;">
+    <div class="card shadow border-0" style="min-height: 200px; overflow-y: auto;">
         <div class="card-header bg-purple text-white">
             <h5 class="mb-0">
                 <i class="bi bi-plus-circle me-2"></i>Tambah Ujian {{ $course->name }}
@@ -16,7 +16,7 @@
                 @csrf
                 
                 <div class="row mb-3">
-                    <div class="col-md-8">
+                    <div class="col-md-4">
                         <label for="name" class="form-label text-purple">Nama Ujian</label>
                         <input type="text" class="form-control border-purple @error('name') is-invalid @enderror" 
                                id="name" name="name" value="{{ old('name') }}">
@@ -25,23 +25,14 @@
                         @enderror
                     </div>
                     
-                    <div class="col-md-4">
-                        <label for="duration" class="form-label text-purple">Durasi (menit)</label>
-                        <input type="number" class="form-control border-purple @error('duration') is-invalid @enderror" 
-                               id="duration" name="duration" value="{{ old('duration') }}">
-                        @error('duration')
+                    <div class="col-md-8">
+                        <label for="note" class="form-label text-purple">Catatan (Opsional)</label>
+                        <textarea class="form-control border-purple @error('note') is-invalid @enderror" 
+                                id="note" name="note" rows="1">{{ old('note') }}</textarea>
+                        @error('note')
                             <div class="invalid-feedback">{{ $message }}</div>
                         @enderror
                     </div>
-                </div>
-                
-                <div class="mb-3">
-                    <label for="note" class="form-label text-purple">Catatan (Opsional)</label>
-                    <textarea class="form-control border-purple @error('note') is-invalid @enderror" 
-                              id="note" name="note" rows="4">{{ old('note') }}</textarea>
-                    @error('note')
-                        <div class="invalid-feedback">{{ $message }}</div>
-                    @enderror
                 </div>
                 
                 <div class="mb-3">

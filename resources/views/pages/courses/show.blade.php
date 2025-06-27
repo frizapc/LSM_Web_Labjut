@@ -179,7 +179,7 @@
                                 <thead>
                                     <tr>
                                         <th class="text-purple">#</th>
-                                        <th class="text-purple">Nama Materi</th>
+                                        <th class="text-purple">Judul</th>
                                         <th class="text-purple">Deskripsi</th>
                                         <th class="text-purple">Ditambahkan</th>
                                         <th class="text-purple">Aksi</th>
@@ -258,7 +258,7 @@
                                 <thead>
                                     <tr>
                                         <th class="text-purple">#</th>
-                                        <th class="text-purple">Nama Ujian</th>
+                                        <th class="text-purple">Judul</th>
                                         <th class="text-purple">Catatan</th>
                                         <th class="text-purple">Durasi</th>
                                         <th class="text-purple">Soal</th>
@@ -274,7 +274,7 @@
                                             <strong>{{ $exam->name }}</strong>
                                         </td>
                                         <td>
-                                            {{ $exam->description }}
+                                            {{ $exam->note ? $exam->note : '-' }}
                                         </td>
                                         <td>
                                             {{ $exam->duration }} menit

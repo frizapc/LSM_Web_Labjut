@@ -36,13 +36,11 @@ class ExamController extends Controller
 
         $request->validate([
             'name' => 'required|string|max:50',
-            'duration' => 'required|integer|min:1',
             'note' => 'nullable|string',
         ]);
 
         Exam::create([
             'name' => $request->name,
-            'duration' => $request->duration,
             'note' => $request->note,
             'course_id' => $courseId,
         ]);
@@ -63,17 +61,43 @@ class ExamController extends Controller
     /**
      * Show the form for editing the specified resource.
      */
-    public function edit(string $id)
+    public function edit(string $courseId, $examId)
     {
-        //
+        $course = Course::findOrFail($courseId);
+
+        $exam = Exam::whereBelongsTo($course)
+            ->findOrFail($examId);
+
+        return view('pages.exams.edit', [
+            'course' => $course,
+            'exam' => $exam,
+        ]);
     }
 
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, string $id)
+    public function update(Request $request, $courseId, $examId)
     {
-        //
+        $course = Course::findOrFail($courseId);
+
+        $request->validate([
+            'name' => 'required|string|max:255',
+            'duration' => 'required|integer|min:1',
+            'note' => 'nullable|string',
+        ]);
+
+        $exam = Exam::whereBelongsTo($course)
+            ->findOrFail($examId)
+            ->update([
+                'name' => $request->name,
+                'duration' => $request->duration,
+                'note' => $request->note,
+            ]);
+
+        return redirect()
+            ->back()
+            ->with('success', 'Ujian berhasil diperbarui!');
     }
 
     /**
