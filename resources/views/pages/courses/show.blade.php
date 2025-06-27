@@ -154,12 +154,14 @@
             </div>
         </div>
     </div>
+
+    <!-- Materi Kursus -->
     <div class="row mt-4">
         <div class="col-12">
             <div class="card shadow border-0">
                 <div class="card-header bg-purple text-white d-flex justify-content-between align-items-center">
                     <h5 class="mb-0">
-                        <i class="bi bi-journal-bookmark me-2"></i>Materi Kursus
+                        <i class="bi bi-journal-bookmark me-2"></i>Materi
                     </h5>
                     <a href="{{ route('courses.materials.create', $course->id) }}" class="btn btn-sm btn-light-purple">
                         <i class="bi bi-plus-circle me-1"></i> Tambah Materi
@@ -216,6 +218,97 @@
                                                             data-bs-toggle="tooltip"
                                                             title="Hapus Materi"
                                                             onclick="return confirm('Hapus materi {{ $material->name }}?')">
+                                                        <i class="bi bi-trash"></i>
+                                                    </button>
+                                                </form>
+                                            </div>
+                                        </td>
+                                    </tr>
+                                    @endforeach
+                                </tbody>
+                            </table>
+                        </div>
+                    @endif
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Ujian Kursus -->
+    <div class="row mt-4">
+        <div class="col-12">
+            <div class="card shadow border-0">
+                <div class="card-header bg-purple text-white d-flex justify-content-between align-items-center">
+                    <h5 class="mb-0">
+                        <i class="bi bi-clipboard2-check me-2"></i>Ujian
+                    </h5>
+                    <a href="{{ route('courses.exams.create', $course->id) }}" class="btn btn-sm btn-light-purple">
+                        <i class="bi bi-plus-circle me-1"></i> Tambah Ujian
+                    </a>
+                </div>
+                <div class="card-body">
+                    @if($course->exams->isEmpty())
+                        <div class="text-center py-4">
+                            <i class="bi bi-clipboard2-x text-purple" style="font-size: 3rem;"></i>
+                            <h5 class="text-purple mt-3">Belum ada ujian tersedia</h5>
+                        </div>
+                    @else
+                        <div class="table-responsive">
+                            <table class="table table-hover">
+                                <thead>
+                                    <tr>
+                                        <th class="text-purple">#</th>
+                                        <th class="text-purple">Nama Ujian</th>
+                                        <th class="text-purple">Catatan</th>
+                                        <th class="text-purple">Durasi</th>
+                                        <th class="text-purple">Soal</th>
+                                        <th class="text-purple">Status</th>
+                                        <th class="text-purple">Aksi</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    @foreach($course->exams as $index => $exam)
+                                    <tr>
+                                        <td>{{ $index + 1 }}</td>
+                                        <td>
+                                            <strong>{{ $exam->name }}</strong>
+                                        </td>
+                                        <td>
+                                            {{ $exam->description }}
+                                        </td>
+                                        <td>
+                                            {{ $exam->duration }} menit
+                                        </td>
+                                        <td>
+                                            {{ $exam->total }}
+                                        </td>
+                                        <td>
+                                            <span class="badge bg-{{ $exam->is_active ? 'success' : 'secondary' }}">
+                                                {{ $exam->is_active ? 'Aktif' : 'Nonaktif' }}
+                                            </span>
+                                        </td>
+                                        <td>
+                                            <div class="d-flex gap-2">
+                                                <a href="{{ route('courses.exams.show', [$course->id, $exam->id]) }}" 
+                                                class="btn btn-sm btn-outline-purple"
+                                                data-bs-toggle="tooltip" 
+                                                title="Detail Ujian">
+                                                    <i class="bi bi-eye"></i>
+                                                </a>
+                                                <a href="{{ route('courses.exams.edit', [$course->id, $exam->id]) }}" 
+                                                class="btn btn-sm btn-outline-primary"
+                                                data-bs-toggle="tooltip"
+                                                title="Edit Ujian">
+                                                    <i class="bi bi-pencil-square"></i>
+                                                </a>
+                                                <form action="{{ route('courses.exams.destroy', [$course->id, $exam->id]) }}" method="POST">
+                                                    @csrf
+                                                    @method('DELETE')
+                                                    <button type="submit" 
+                                                            class="btn btn-sm btn-outline-danger"
+                                                            data-bs-toggle="tooltip"
+                                                            title="Hapus Ujian"
+                                                            onclick="return confirm('Hapus ujian {{ $exam->name }}?')">
                                                         <i class="bi bi-trash"></i>
                                                     </button>
                                                 </form>

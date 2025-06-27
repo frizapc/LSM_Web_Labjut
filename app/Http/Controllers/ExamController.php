@@ -3,10 +3,10 @@
 namespace App\Http\Controllers;
 
 use App\Models\Course;
-use App\Models\Material;
+use App\Models\Exam;
 use Illuminate\Http\Request;
 
-class MaterialController extends Controller
+class ExamController extends Controller
 {
     /**
      * Display a listing of the resource.
@@ -22,7 +22,7 @@ class MaterialController extends Controller
     public function create($courseId)
     {
         $course = Course::findOrFail($courseId);
-        return view('pages.materials.create', [
+        return view('pages.exams.create', [
             'course' => $course,
         ]);
     }
@@ -36,20 +36,20 @@ class MaterialController extends Controller
 
         $request->validate([
             'name' => 'required|string|max:50',
-            'description' => 'required|string',
-            'source' => 'required|file|mimes:pdf|max:1024'
+            'duration' => 'required|integer|min:1',
+            'note' => 'nullable|string',
         ]);
 
-        Material::create([
+        Exam::create([
             'name' => $request->name,
-            'description' => $request->description,
-            'source' => $request->file('source'),
+            'duration' => $request->duration,
+            'note' => $request->note,
             'course_id' => $courseId,
         ]);
 
         return redirect()
             ->route('courses.show', $courseId)
-            ->with('success', 'Materi baru berhasil ditambahkan!');
+            ->with('success', 'Ujian baru berhasil ditambahkan!');
     }
 
     /**
@@ -79,15 +79,15 @@ class MaterialController extends Controller
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(string $courseId, $materialId)
+    public function destroy(string $courseId, $examId)
     {
         $course = Course::findOrFail($courseId);
-        $material = Material::whereBelongsTo($course)
-            ->findOrFail($materialId);
-        $material
+        $exam = Exam::whereBelongsTo($course)
+            ->findOrFail($examId);
+        $exam
             ->delete();
         return redirect()
             ->route('courses.show', $courseId)
-            ->with('success', 'Materi berhasil dihapus!');
+            ->with('success', 'Ujian berhasil dihapus!');
     }
 }
