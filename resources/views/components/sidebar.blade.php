@@ -5,7 +5,7 @@
     
     <ul class="nav flex-column">
         <li class="nav-item">
-            <a class="nav-link active" href="#">
+            <a class="nav-link active" href="/">
                 <i class="bi bi-speedometer2 me-2"></i> Dashboard
             </a>
         </li>
@@ -42,8 +42,12 @@
     });
     
     if (path === '/' || path === '/dashboard') {
-
-        document.querySelector('.nav-link[href="#"]').classList.add('active');
+        console.log(path)
+        const dashboardLink = Array.from(navLinks).find(link => 
+            link.textContent.includes('Dashboard') || 
+            link.querySelector('.bi-speedometer2')
+        );
+        if (dashboardLink) dashboardLink.classList.add('active');
     } else if (path.startsWith('/courses')) {
 
         const kursusLink = Array.from(navLinks).find(link => 

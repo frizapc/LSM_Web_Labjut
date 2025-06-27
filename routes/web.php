@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\CourseController;
+use App\Http\Controllers\ExamController;
 use App\Http\Controllers\MaterialController;
 use Illuminate\Support\Facades\Route;
 
@@ -10,3 +11,4 @@ Route::get('/', function () {
 
 Route::resource('courses', CourseController::class);
 Route::resource('courses.materials', MaterialController::class);
+Route::resource('courses.exams', ExamController::class);
