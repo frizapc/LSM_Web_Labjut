@@ -4,8 +4,10 @@ namespace App\Providers;
 
 use App\Models\Course;
 use App\Models\Material;
+use App\Models\Question;
 use App\Observers\CourseObserver;
 use App\Observers\MaterialObserver;
+use App\Observers\QuestionObserver;
 use Carbon\Carbon;
 use Illuminate\Pagination\Paginator;
 use Illuminate\Support\ServiceProvider;
@@ -28,6 +30,7 @@ class AppServiceProvider extends ServiceProvider
         Paginator::useBootstrapFive();
         Course::observe(CourseObserver::class);
         Material::observe(MaterialObserver::class);
+        Question::observe(QuestionObserver::class);
         Carbon::setLocale('id');
     }
 }

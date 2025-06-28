@@ -1,4 +1,4 @@
-<nav class="navbar navbar-expand-lg navbar-dark bg-purple fixed-top shadow">
+<nav class="navbar navbar-expand-lg navbar-dark bg-purple shadow fixed-top z-2">
     <div class="container-fluid">
         <button id="sidebarToggle" class="navbar-toggler me-2" type="button">
             <span class="navbar-toggler-icon"></span>

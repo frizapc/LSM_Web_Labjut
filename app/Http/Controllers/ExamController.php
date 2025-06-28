@@ -87,7 +87,7 @@ class ExamController extends Controller
             'note' => 'nullable|string',
         ]);
 
-        $exam = Exam::whereBelongsTo($course)
+        Exam::whereBelongsTo($course)
             ->findOrFail($examId)
             ->update([
                 'name' => $request->name,

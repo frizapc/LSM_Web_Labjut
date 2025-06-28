@@ -1,4 +1,4 @@
-<div class="sidebar p-3">
+<div class="sidebar vh-100 fixed-top z-1">
     <div class="mb-4 text-center">
         <h5 class="text-white">Menu</h5>
     </div>
