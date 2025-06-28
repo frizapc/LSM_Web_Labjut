@@ -15,8 +15,8 @@ return new class extends Migration
             $table->id();
             $table->string('name', 50);
             $table->text('note')->nullable();
-            $table->integer('total')->default(0);
             $table->integer('duration')->default(60);
+            $table->boolean('is_active')->default(false);
             $table
                 ->foreignId('course_id')
                 ->constrained(

@@ -11,6 +11,14 @@
         <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
     </div>
     @endif
+    
+    @if(session('error'))
+    <div class="alert alert-danger alert-dismissible fade show" role="alert">
+            <i class="bi bi-exclamation-triangle-fill me-2"></i>
+            <strong>Terdapat kesalahan! {{ session('error') }}</strong>
+            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+        </div>
+    @endif
 
     <div class="card shadow border-0" style="min-height: 200px; overflow-y: auto;">
         <div class="card-header bg-purple text-white">
@@ -57,7 +65,7 @@
                 <div class="mb-3">
                     <div class="form-check form-switch">
                         <input class="form-check-input" type="checkbox" id="is_active" name="is_active" value="1" 
-                            {{ old('is_active', $exam->is_active) ? 'checked' : '' }}>
+                            {{ $exam->is_active ? 'checked' : '' }}>
                         <label class="form-check-label text-purple" for="is_active">Aktifkan Ujian</label>
                     </div>
                 </div>
@@ -128,17 +136,17 @@
                                         <label class="form-label text-purple">Opsi Jawaban</label>
                                         @foreach($question->options as $option)
                                         <div class="input-group mb-2">
+                                            <div class="input-group-text bg-white">
+                                                <input class="form-check-input mt-0" 
+                                                type="radio" 
+                                                name="correct_option" 
+                                                value="{{ $option->id }}"
+                                                {{ $option->is_correct ? 'checked' : '' }}>
+                                            </div>
                                             <input type="text" 
                                                 class="form-control border-purple" 
                                                 name="{{ $option->id }}" 
                                                 value="{{ $option->option_text }}">
-                                            <div class="input-group-text bg-white">
-                                                <input class="form-check-input mt-0" 
-                                                    type="radio" 
-                                                    name="correct_option" 
-                                                    value="{{ $option->id }}"
-                                                    {{ $option->is_correct ? 'checked' : '' }}>
-                                            </div>
                                         </div>
                                         @endforeach
                                     </div>
@@ -192,6 +200,13 @@
 </style>
 
 <script>
+    document.addEventListener('DOMContentLoaded', function() {
+        const isActiveCheckbox = document.getElementById('is_active');
+        isActiveCheckbox.addEventListener('change', function() {
+            this.value = this.checked ? '1' : '0';
+        });
+    });
+
     function confirmDelete(ids) {
         if (confirm('Apakah Anda yakin ingin menghapus soal ini?')) {
             const form = document.getElementById('deleteQuestionForm');

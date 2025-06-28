@@ -35,13 +35,6 @@
                     </div>
                 </div>
                 
-                <div class="mb-3">
-                    <div class="form-check form-switch">
-                        <input class="form-check-input" type="checkbox" id="is_active" name="is_active" value="1" checked>
-                        <label class="form-check-label text-purple" for="is_active">Aktifkan Ujian</label>
-                    </div>
-                </div>
-                
                 <div class="d-flex justify-content-end mt-3">
                     <a href="{{ route('courses.show', $course->id) }}" class="btn btn-outline-purple me-2">
                         <i class="bi bi-arrow-left me-1"></i> Kembali

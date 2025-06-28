@@ -10,7 +10,7 @@ class Exam extends Model
 {
     protected $table = 'exams';
     protected $primaryKey = 'id';
-    protected $fillable = ['name', 'note', 'total', 'duration', 'course_id'];
+    protected $fillable = ['name', 'note', 'duration', 'is_active', 'course_id'];
     public $timestamps = true;
 
     /**

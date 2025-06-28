@@ -147,9 +147,6 @@
                     <p class="card-text">
                         {{ $course->description ?? 'Belum ada deskripsi tersedia.' }}
                     </p>
-                    <a href="#" class="btn btn-sm btn-outline-purple">
-                        <i class="bi bi-plus-circle me-1"></i> Tambah Deskripsi
-                    </a>
                 </div>
             </div>
         </div>
@@ -171,7 +168,7 @@
                     @if($course->materials->isEmpty())
                         <div class="text-center py-4">
                             <i class="bi bi-journal-x text-purple" style="font-size: 3rem;"></i>
-                            <h5 class="text-purple mt-3">Belum ada materi tersedia</h5>
+                            <h5 class="text-purple mt-3">{{ $course->description ? $course->description:'Belum ada materi tersedia'}}</h5>
                         </div>
                     @else
                         <div class="table-responsive">
@@ -193,7 +190,7 @@
                                             <strong>{{ $material->name }}</strong>
                                         </td>
                                         <td>
-                                            {{ $material->description }}
+                                        {{ $material->description ?? '-' }}
                                         </td>
                                         <td>
                                             <small class="text-muted">
@@ -280,7 +277,7 @@
                                             {{ $exam->duration }} menit
                                         </td>
                                         <td>
-                                            {{ $exam->total }}
+                                            {{ count($exam->questions) }}
                                         </td>
                                         <td>
                                             <span class="badge bg-{{ $exam->is_active ? 'success' : 'secondary' }}">

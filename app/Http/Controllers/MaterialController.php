@@ -36,7 +36,7 @@ class MaterialController extends Controller
 
         $request->validate([
             'name' => 'required|string|max:50',
-            'description' => 'required|string',
+            'description' => 'nullable|string',
             'source' => 'required|file|mimes:pdf|max:1024'
         ]);
 

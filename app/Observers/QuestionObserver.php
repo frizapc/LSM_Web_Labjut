@@ -14,7 +14,8 @@ class QuestionObserver
      */
     public function created(Question $question): void
     {
-        for ($i = 1; $i <= 4; $i++) {
+        $optionSize = 4;
+        for ($i = 1; $i <= $optionSize; $i++) {
             Option::create([
                 'question_id' => $question->id,
                 'option_text' => null,

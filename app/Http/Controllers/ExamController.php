@@ -33,7 +33,6 @@ class ExamController extends Controller
     public function store(Request $request, $courseId)
     {
         Course::findOrFail($courseId);
-
         $request->validate([
             'name' => 'required|string|max:50',
             'note' => 'nullable|string',
@@ -80,11 +79,11 @@ class ExamController extends Controller
     public function update(Request $request, $courseId, $examId)
     {
         $course = Course::findOrFail($courseId);
-
         $request->validate([
             'name' => 'required|string|max:255',
             'duration' => 'required|integer|min:1',
             'note' => 'nullable|string',
+            'is_active' => 'boolean',
         ]);
 
         Exam::whereBelongsTo($course)
@@ -93,6 +92,7 @@ class ExamController extends Controller
                 'name' => $request->name,
                 'duration' => $request->duration,
                 'note' => $request->note,
+                'is_active' => $request->has('is_active'),
             ]);
 
         return redirect()

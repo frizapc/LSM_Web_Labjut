@@ -7,6 +7,7 @@ use App\Models\Exam;
 use App\Models\Option;
 use App\Models\Question;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 
 class QuestionController extends Controller
 {
@@ -63,33 +64,45 @@ class QuestionController extends Controller
      */
     public function update(Request $request, string $courseId, $examId, $questionId)
     {
-        $request->validate([
-            'question_text' => 'nullable',
+        $validated = $request->validate([
+            'question_text' => 'nullable|string',
             'correct_option' => 'required|string',
         ]);
-        Course::findOrFail($courseId);
-        Exam::findOrFail($examId);
-        $question = Question::findOrFail($questionId);
-        $question->update([
-            'question_text' => $request->question_text,
-        ]);
-        $optionIds = array_values(
-    array_filter(
-        array_keys($request->all()), 'is_numeric'
-            )
-        );
-
-        foreach ($optionIds as $optionId){
-            Option::findOrFail($optionId)
-                ->update([
-                    'option_text' => $request[$optionId],
-                    'is_correct' => $request->correct_option == $optionId ? true : false
-                ]);
-
+        
+        try {
+            DB::transaction(function () use ($request, $validated, $courseId, $examId, $questionId) {
+                // Verifikasi relasi sekaligus
+                $question = Question::where('id', $questionId)
+                    ->where('exam_id', $examId)
+                    ->whereHas('exam', function($q) use ($courseId) {
+                        $q->where('course_id', $courseId);
+                    })
+                    ->firstOrFail();
+    
+                // Update pertanyaan
+                $question->update(['question_text' => $validated['question_text']]);
+    
+                // Filter hanya opsi yang valid (non-null)
+                $validOptions = array_filter($request->all(), function($value, $key) {
+                    return is_numeric($key) && $value !== null;
+                }, ARRAY_FILTER_USE_BOTH);
+                
+                // Batch update opsi
+                foreach ($validOptions as $optionId => $optionText) {
+                    Option::where('id', $optionId)
+                        ->where('question_id', $questionId)
+                        ->update([
+                            'option_text' => $optionText,
+                            'is_correct' => ($request->correct_option == $optionId)
+                        ]);
+                }
+            });
+    
+            return back()->with('success', 'Soal berhasil diperbarui!');
+    
+        } catch (\Exception $e) {
+            return back()->with('error', 'Gagal memperbarui soal');
         }
-        return redirect()
-            ->back()
-            ->with('success', 'Soal berhasil diperbarui!');
     }
 
     /**
