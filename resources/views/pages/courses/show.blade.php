@@ -73,7 +73,7 @@
                                         <i class="bi bi-person-check-fill text-purple" style="font-size: 1.5rem;"></i>
                                     </div>
                                     <div>
-                                        <h3 class="mb-0">{{ $course->students_count ?? 0 }}</h3>
+                                        <h3 class="mb-0">{{ $course->students_count ?: 0 }}</h3>
                                         <small class="text-muted">Siswa terdaftar</small>
                                     </div>
                                 </div>
@@ -145,7 +145,7 @@
                 </div>
                 <div class="card-body">
                     <p class="card-text">
-                        {{ $course->description ?? 'Belum ada deskripsi tersedia.' }}
+                        {{ $course->description ?: 'Belum ada deskripsi tersedia.' }}
                     </p>
                 </div>
             </div>
@@ -168,7 +168,7 @@
                     @if($course->materials->isEmpty())
                         <div class="text-center py-4">
                             <i class="bi bi-journal-x text-purple" style="font-size: 3rem;"></i>
-                            <h5 class="text-purple mt-3">{{ $course->description ? $course->description:'Belum ada materi tersedia'}}</h5>
+                            <h5 class="text-purple mt-3">{{ $course->description ?:'Belum ada materi tersedia'}}</h5>
                         </div>
                     @else
                         <div class="table-responsive">
@@ -190,7 +190,7 @@
                                             <strong>{{ $material->name }}</strong>
                                         </td>
                                         <td>
-                                        {{ $material->description ?? '-' }}
+                                        {{ $material->description ?: '-' }}
                                         </td>
                                         <td>
                                             <small class="text-muted">
@@ -271,7 +271,7 @@
                                             <strong>{{ $exam->name }}</strong>
                                         </td>
                                         <td>
-                                            {{ $exam->note ? $exam->note : '-' }}
+                                            {{ $exam->note ?: '-' }}
                                         </td>
                                         <td>
                                             {{ $exam->duration }} menit
@@ -286,12 +286,13 @@
                                         </td>
                                         <td>
                                             <div class="d-flex gap-2">
-                                                <a href="{{ route('courses.exams.show', [$course->id, $exam->id]) }}" 
-                                                class="btn btn-sm btn-outline-purple"
+                                                <button class="btn btn-sm btn-outline-purple"
+                                                data-bs-toggle="modal" 
+                                                data-bs-target="#startExamModal-{{ $exam->id }}"
                                                 data-bs-toggle="tooltip" 
-                                                title="Detail Ujian">
-                                                    <i class="bi bi-eye"></i>
-                                                </a>
+                                                title="Mulai Ujian">
+                                                    <i class="bi bi-stopwatch-fill"></i>
+                                                </button>
                                                 <a href="{{ route('courses.exams.edit', [$course->id, $exam->id]) }}" 
                                                 class="btn btn-sm btn-outline-primary"
                                                 data-bs-toggle="tooltip"
@@ -309,6 +310,50 @@
                                                         <i class="bi bi-trash"></i>
                                                     </button>
                                                 </form>
+                                            </div>
+
+                                            <!-- Modal -->
+                                            <div class="modal fade" id="startExamModal-{{ $exam->id }}" tabindex="-1" aria-labelledby="startExamModalLabel" aria-hidden="true">
+                                                <div class="modal-dialog modal-dialog-centered">
+                                                    <div class="modal-content">
+                                                        <div class="modal-header bg-purple text-white">
+                                                            <h5 class="modal-title" id="startExamModalLabel">Konfirmasi Mulai Ujian</h5>
+                                                            <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+                                                        </div>
+                                                        <div class="modal-body">
+                                                            <div class="mb-3">
+                                                                <h6 class="text-purple">{{ $exam->name }}</h6>
+                                                                <p class="text-muted small">{{ $exam->note ?: 'Tidak ada deskripsi' }}</p>
+                                                            </div>
+                                                            
+                                                            <div class="row">
+                                                                <div class="col-6">
+                                                                    <div class="d-flex align-items-center mb-2">
+                                                                        <i class="bi bi-list-ol text-purple me-2"></i>
+                                                                        <span>Jumlah Soal: {{ count($exam->questions) }}</span>
+                                                                    </div>
+                                                                </div>
+                                                                <div class="col-6">
+                                                                    <div class="d-flex align-items-center mb-2">
+                                                                        <i class="bi bi-clock text-purple me-2"></i>
+                                                                        <span>Durasi: {{ $exam->duration }} menit</span>
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                            
+                                                            <div class="alert alert-warning mt-3">
+                                                                <i class="bi bi-exclamation-triangle-fill me-2"></i>
+                                                                Pastikan Anda sudah siap sebelum memulai ujian!
+                                                            </div>
+                                                        </div>
+                                                        <div class="modal-footer">
+                                                            <a href="{{ route('courses.exams.show', [$course->id, $exam->id]) }}" 
+                                                            class="btn btn-{{ $exam->is_active ? 'danger' : 'secondary'}}">
+                                                                <i class="bi bi-stopwatch-fill me-1"></i> {{ $exam->is_active ? 'Mulai Sekarang' : 'Nonaktif'}} 
+                                                            </a>
+                                                        </div>
+                                                    </div>
+                                                </div>
                                             </div>
                                         </td>
                                     </tr>

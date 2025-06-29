@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Course;
 use App\Models\Exam;
+use App\Models\Question;
 use Illuminate\Http\Request;
 
 class ExamController extends Controller
@@ -52,9 +53,20 @@ class ExamController extends Controller
     /**
      * Display the specified resource.
      */
-    public function show(string $id)
+    public function show(string $courseId, $examId)
     {
-        //
+        $course = Course::findOrFail($courseId);
+
+        $exam = Exam::whereBelongsTo($course)
+            ->findOrFail($examId);
+        
+        $questions = Question::where('exam_id', $exam->id)->paginate(1);
+
+        return view('pages.exams.show', [
+            'course' => $course,
+            'exam' => $exam,
+            'questions' => $questions,
+        ]);
     }
 
     /**
@@ -113,5 +125,9 @@ class ExamController extends Controller
         return redirect()
             ->route('courses.show', $courseId)
             ->with('success', 'Ujian berhasil dihapus!');
+    }
+
+    public function submit(Request $request, $courseId, $examId){
+        return redirect($request->action);
     }
 }

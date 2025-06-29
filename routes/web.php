@@ -14,3 +14,7 @@ Route::resource('courses', CourseController::class);
 Route::resource('courses.materials', MaterialController::class);
 Route::resource('courses.exams', ExamController::class);
 Route::resource('courses.exams.questions', QuestionController::class);
+Route::post(
+    '/courses/{courseId}/exams/{examId}',
+    [ExamController::class, 'submit']
+)->name('courses.exams.submit');
