@@ -10,14 +10,6 @@ use Illuminate\Http\Request;
 class ExamController extends Controller
 {
     /**
-     * Display a listing of the resource.
-     */
-    public function index()
-    {
-        //
-    }
-
-    /**
      * Show the form for creating a new resource.
      */
     public function create($courseId)
@@ -93,7 +85,7 @@ class ExamController extends Controller
         $course = Course::findOrFail($courseId);
         $request->validate([
             'name' => 'required|string|max:255',
-            'duration' => 'required|integer|min:1',
+            'duration' => 'required|integer|min:1|max:120',
             'note' => 'nullable|string',
             'is_active' => 'boolean',
         ]);

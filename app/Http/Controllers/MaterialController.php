@@ -9,14 +9,6 @@ use Illuminate\Http\Request;
 class MaterialController extends Controller
 {
     /**
-     * Display a listing of the resource.
-     */
-    public function index()
-    {
-        //
-    }
-
-    /**
      * Show the form for creating a new resource.
      */
     public function create($courseId)
@@ -50,14 +42,6 @@ class MaterialController extends Controller
         return redirect()
             ->route('courses.show', $courseId)
             ->with('success', 'Materi baru berhasil ditambahkan!');
-    }
-
-    /**
-     * Display the specified resource.
-     */
-    public function show(string $id)
-    {
-        //
     }
 
     /**
