@@ -3,7 +3,13 @@
         <button id="sidebarToggle" class="navbar-toggler me-2" type="button">
             <span class="navbar-toggler-icon"></span>
         </button>
-        <a class="navbar-brand fw-bold" href="#">Learning Management System</a>
+        <a class="navbar-brand fw-bold" href="#">
+            @if(request()->routeIs('courses.exams.show'))
+            {{ "$exam->name - $course->name" }}
+            @else
+            Learning Management System
+            @endif
+        </a>
         
         <div class="collapse navbar-collapse">
             <ul class="navbar-nav ms-auto">

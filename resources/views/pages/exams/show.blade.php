@@ -112,8 +112,7 @@
       font-size: 1.2rem;
   }
   input:checked + label {
-      border-color: #6a0dad;
-      background-color: #a503fc;
+      background-color: #6a0dad;
       color: #dee2e6;
       font-weight: bold;
   }
