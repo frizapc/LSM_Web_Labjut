@@ -39,7 +39,7 @@ class AuthController extends Controller
     {
         $request->validate([
             'name' => 'required|string|max:50|unique:users,username',
-            'username' => 'required|string|max:50|min:6',
+            'username' => 'required|string|max:20|min:6',
             'password' => 'required|string|min:6|confirmed',
             'password_confirmation' => 'required|string|min:6',
         ]);
@@ -54,7 +54,13 @@ class AuthController extends Controller
         return redirect()->route('login');
     }
 
-    public function logout(){
-         
+    public function logout(Request $request){
+        Auth::logout();
+ 
+        $request->session()->invalidate();
+     
+        $request->session()->regenerateToken();
+     
+        return redirect('/login');
     }
 }

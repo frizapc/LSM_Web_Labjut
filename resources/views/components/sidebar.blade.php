@@ -1,4 +1,5 @@
 <div class="sidebar mt-5 vh-100 fixed-top z-1">
+    @auth
     @if(request()->routeIs('courses.exams.show'))
     <div class="my-2 text-center">
         <h5 class="text-white">Soal</h5>
@@ -61,6 +62,26 @@
         </li>
     </ul>
     @endif
+    @endauth
+
+    @guest
+    <div class="my-2 text-center">
+        <h5 class="text-white">Menu</h5>
+    </div>
+    
+    <ul class="nav flex-column">
+        <li class="nav-item">
+            <a class="nav-link" href="{{ route('login') }}">
+                <i class="bi bi-box-arrow-in-right me-2"></i> Login
+            </a>
+        </li>
+        <li class="nav-item">
+            <a class="nav-link" href="{{ route('register') }}">
+                <i class="bi bi-person-plus me-2"></i> Register
+            </a>
+        </li>
+    </ul>
+    @endguest
 </div>
 
 <style>
@@ -131,6 +152,20 @@
         const pengaturanLink = Array.from(navLinks).find(link => 
             link.textContent.includes('Pengaturan') || 
             link.querySelector('.bi-gear')
+        );
+        if (pengaturanLink) pengaturanLink.classList.add('active');
+    } else if (path.startsWith('/login')) {
+
+        const pengaturanLink = Array.from(navLinks).find(link => 
+            link.textContent.includes('Login') || 
+            link.querySelector('.bi-box-arrow-in-right')
+        );
+        if (pengaturanLink) pengaturanLink.classList.add('active');
+    } else if (path.startsWith('/register')) {
+
+        const pengaturanLink = Array.from(navLinks).find(link => 
+            link.textContent.includes('Register') || 
+            link.querySelector('.bi-person-plus')
         );
         if (pengaturanLink) pengaturanLink.classList.add('active');
     }

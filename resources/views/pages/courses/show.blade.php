@@ -168,7 +168,7 @@
                     @if($course->materials->isEmpty())
                         <div class="text-center py-4">
                             <i class="bi bi-journal-x text-purple" style="font-size: 3rem;"></i>
-                            <h5 class="text-purple mt-3">{{ $course->description ?:'Belum ada materi tersedia'}}</h5>
+                            <h5 class="text-purple mt-3">{{'Belum ada materi tersedia'}}</h5>
                         </div>
                     @else
                         <div class="table-responsive">
