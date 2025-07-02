@@ -11,20 +11,17 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('exams', function (Blueprint $table) {
+        Schema::create('options', function (Blueprint $table) {
             $table->id();
-            $table->string('name', 50);
-            $table->text('note')->nullable();
-            $table->integer('duration')->default(60);
-            $table->boolean('is_active')->default(false);
+            $table->text('option_text')->nullable();
+            $table->boolean('is_correct')->default(false);
             $table
-                ->foreignId('course_id')
+                ->foreignId('question_id')
                 ->constrained(
-                    table: 'courses', indexName: 'exams_course_id'
+                    table: 'questions', indexName: 'options_question_id'
                 )
                 ->cascadeOnUpdate()
                 ->cascadeOnDelete();
-            $table->timestamps();
         });
     }
 
@@ -33,6 +30,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('exams');
+        Schema::dropIfExists('options');
     }
 };

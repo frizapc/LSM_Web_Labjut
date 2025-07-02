@@ -42,6 +42,7 @@
             background-color: var(--purple-dark);
             width: 250px;
             min-height: calc(100vh - 56px);
+            padding-top: 1rem;
         }
         
         .sidebar .nav-link {
@@ -61,6 +62,7 @@
         
         .main-content{
             flex: 1;
+            margin-left: 250px;
         }
         .main-content > div > div{
             padding: 20px;
@@ -151,7 +153,7 @@
         @include('components.sidebar')
         
         <div class="main-content">
-            <div class="main-wrapper">
+            <div class="main-wrapper position-relative">
                 @yield('content')
             </div>
             @include('components.footer')

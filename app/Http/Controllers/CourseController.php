@@ -12,7 +12,7 @@ class CourseController extends Controller
      */
     public function index()
     {
-        $courses = Course::paginate(6);
+        $courses = Course::paginate(1);
         return view('pages.courses.index', compact('courses'));
     }
 
@@ -32,12 +32,14 @@ class CourseController extends Controller
         $request->validate([
             'name' => 'required|string|unique:courses,name|max:50',
             'level' => 'required|string',
+            'description' => 'nullable|string',
             'photo' => 'required|image|file|max:1024'
         ]);
         
         Course::create([
             'name' => $request->name,
             'level' => $request->level,
+            'description' => $request->description,
             'photo' => $request->file('photo'),
         ]);
 
@@ -74,12 +76,14 @@ class CourseController extends Controller
         $request->validate([
             'name' => 'required|string|max:50|unique:courses,name,'.$course->id,
             'level' => 'required|string',
+            'description' => 'nullable|string',
             'photo' => 'nullable|image|file|max:1024'
         ]);
          
         $course->update([
             'name' => $request->name,
             'level' => $request->level,
+            'description' => $request->description,
             'photo' => $request->file('photo'),
         ]);
         
@@ -93,8 +97,7 @@ class CourseController extends Controller
      */
     public function destroy(string $id)
     {
-        $course = Course::findOrFail($id);
-        $course->delete();
+        $course = Course::findOrFail($id)->delete();
         return redirect()
             ->route('courses.index')
             ->with('success', 'Kursus berhasil dihapus');

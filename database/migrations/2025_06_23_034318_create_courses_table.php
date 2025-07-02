@@ -17,6 +17,7 @@ return new class extends Migration
             $table->id();
             $table->string('code')->nullable();
             $table->string('name')->unique();
+            $table->text('description')->nullable();
             $table->enum('level', ['Pemula', 'Menengah', 'Mahir']);
             $table->string('photo')->nullable();
             $table->timestamps();

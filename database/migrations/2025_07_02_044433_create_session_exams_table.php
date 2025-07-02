@@ -11,19 +11,23 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('exams', function (Blueprint $table) {
+        Schema::create('session_exams', function (Blueprint $table) {
             $table->id();
-            $table->string('name', 50);
-            $table->text('note')->nullable();
-            $table->integer('duration')->default(60);
-            $table->boolean('is_active')->default(false);
             $table
-                ->foreignId('course_id')
+                ->foreignId('user_id')
                 ->constrained(
-                    table: 'courses', indexName: 'exams_course_id'
+                    table: 'users', indexName: 'session_user_exam_id'
                 )
                 ->cascadeOnUpdate()
                 ->cascadeOnDelete();
+            $table
+                ->foreignId('exam_id')
+                ->constrained(
+                    table: 'exams', indexName: 'session_exam_id'
+                )
+                ->cascadeOnUpdate()
+                ->cascadeOnDelete();
+            $table->timestamp('completed_at');
             $table->timestamps();
         });
     }
@@ -33,6 +37,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('exams');
+        Schema::dropIfExists('session_exams');
     }
 };

@@ -9,7 +9,7 @@ class Course extends Model
 {
     protected $table = 'courses';
     protected $primaryKey = 'id';
-    protected $fillable = ['name', 'level', 'photo', 'code'];
+    protected $fillable = ['name', 'level', 'description', 'photo', 'code'];
     public $timestamps = true;
 
     public function materials(): HasMany
