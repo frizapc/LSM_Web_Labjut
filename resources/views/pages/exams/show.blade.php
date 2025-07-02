@@ -12,7 +12,7 @@
                 </h5>
                 <div class="d-flex align-items-center">
                     <span class="badge bg-light fs-6 text-black me-2">
-                        <i class="bi bi-clock me-1"></i> {{ $exam->duration }} menit
+                        <i class="bi bi-clock me-1"></i>
                     </span>
                 </div>
             </div>
@@ -54,9 +54,10 @@
                     <!-- Navigation & Submit -->
                     <div class="d-flex justify-content-between mt-4">
                         @if($questions->currentPage() > 1)
-                            <a href="{{ $questions->previousPageUrl() }}" class="btn btn-outline-purple">
-                                <i class="bi bi-chevron-left me-1"></i> Sebelumnya
-                            </a>
+                            <button type="submit" name="action" value="{{ $questions->previousPageUrl() }}" class="btn btn-purple">
+                                <i class="bi bi-chevron-left ms-1"></i>
+                                Sebelumnya
+                            </button>
                         @else
                             <span></span> <!-- Spacer -->
                         @endif
@@ -123,14 +124,64 @@
 </style>
 
 <script>
-  document.querySelectorAll('input[type="radio"][name="answer"]').forEach((radio) => {
-      radio.addEventListener('change', () => {
-          document.querySelectorAll('.form-check').forEach((el) => el.classList.remove('selected'));
-          if (radio.checked) {
-              radio.closest('.form-check').classList.add('selected');
-          }
-      });
-  });
+document.querySelectorAll('input[type="radio"][name="answer"]').forEach((radio) => {
+    radio.addEventListener('change', () => {
+        document.querySelectorAll('.form-check').forEach((el) => el.classList.remove('selected'));
+        if (radio.checked) {
+            radio.closest('.form-check').classList.add('selected');
+        }
+        fetch("{{ route('courses.exams.submit', [$course->id, $exam->id]) }}", {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'X-CSRF-TOKEN': '{{ csrf_token() }}'
+            },
+            body: JSON.stringify({
+                answer: radio.value,
+            })
+        })
+        .then(response => response.json())
+        .then(data => {
+            console.log('Jawaban disimpan:', data);
+        })
+        .catch(error => console.error('Gagal menyimpan jawaban:', error));
+    });
+});
+
+let remainingSeconds = parseInt("{{ $timeLeft }}") ;
+const icon = document.querySelector('.bi-clock'); 
+const textNode = icon.nextSibling;
+const updateTimer = () => {
+    if (remainingSeconds <= 0) {
+        clearInterval(timer);
+        textNode.nodeValue = "00:00";
+        
+        fetch("{{ route('logout') }}", {
+            method: 'GET',
+            headers: {
+                'X-CSRF-TOKEN': '{{ csrf_token() }}'
+            },
+        })
+        .then(response => {
+            if (response.redirected) {
+                window.location.href = response.url;
+            }
+        })
+        .catch(error => console.error('Logout error:', error));
+        
+        return;
+    }
+
+    const minutes = Math.floor(remainingSeconds / 60);
+    const seconds = remainingSeconds % 60;
+    
+    textNode.nodeValue = 
+        `${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`;
+    
+    remainingSeconds--;
+};
+const timer = setInterval(updateTimer, 1000);
+updateTimer();
 </script>
 
 @endsection

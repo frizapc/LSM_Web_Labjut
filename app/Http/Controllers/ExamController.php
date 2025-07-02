@@ -5,6 +5,8 @@ namespace App\Http\Controllers;
 use App\Models\Course;
 use App\Models\Exam;
 use App\Models\Question;
+use App\Models\SessionExam;
+use Carbon\Carbon;
 use Illuminate\Http\Request;
 
 class ExamController extends Controller
@@ -45,19 +47,34 @@ class ExamController extends Controller
     /**
      * Display the specified resource.
      */
-    public function show(string $courseId, $examId)
+    public function show(Request $request,  $courseId, $examId)
     {
         $course = Course::findOrFail($courseId);
-
+        
         $exam = Exam::whereBelongsTo($course)
-            ->findOrFail($examId);
+        ->findOrFail($examId);
         
         $questions = Question::where('exam_id', $exam->id)->paginate(1);
+        
+        $user = $request->user();
+        
+        $sessionExam = SessionExam::firstOrCreate(
+            [
+                'user_id' => $user->id,
+                'exam_id' => $examId,
+            ],
+            [
+                'completed_at' => now()->addMinutes($exam->duration),
+            ]
+        );
+        
+        $timeLeft = now()->diffInSeconds($sessionExam->completed_at);
 
         return view('pages.exams.show', [
             'course' => $course,
             'exam' => $exam,
             'questions' => $questions,
+            'timeLeft' => $timeLeft
         ]);
     }
 
@@ -120,6 +137,13 @@ class ExamController extends Controller
     }
 
     public function submit(Request $request, $courseId, $examId){
-        return redirect($request->action);
+        
+        if($request->action){
+            return redirect($request->action);
+        }
+        return response()->json([
+            'status' => 'saved',
+            'message' => 'Jawaban disimpan sementara.'
+        ]);
     }
 }
