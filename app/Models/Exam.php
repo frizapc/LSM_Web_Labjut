@@ -25,4 +25,9 @@ class Exam extends Model
     {
         return $this->hasMany(Question::class);
     }
+
+    public function scores(): HasMany
+    {
+        return $this->hasMany(Score::class);
+    }
 }

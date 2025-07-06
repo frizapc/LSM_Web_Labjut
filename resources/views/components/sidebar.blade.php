@@ -51,7 +51,7 @@
             </a>
         </li>
         <li class="nav-item">
-            <a class="nav-link" href="#">
+            <a class="nav-link" href="/reports">
                 <i class="bi bi-file-earmark-text me-2"></i> Laporan
             </a>
         </li>

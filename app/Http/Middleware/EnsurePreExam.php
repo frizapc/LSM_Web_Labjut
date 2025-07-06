@@ -39,7 +39,7 @@ class EnsurePreExam
                     ->with('warning', 'Tidak dapat memulai ujian');
         }
         
-        $request->attributes->set('exam', $exam);
+        // $request->attributes->set('exam', $exam);
 
         return $next($request);
     }

@@ -60,11 +60,6 @@ class ExamController extends Controller
         ->findOrFail($examId);
         
         $user = $request->user();
-
-        Log::info(ExamScoringService::calculate(
-            $user->id, 
-            $examId,
-        ));
         
         $sessionExam = SessionExam::firstOrCreate(
         [
@@ -214,10 +209,11 @@ class ExamController extends Controller
             ['exam_id', $examId]
         ])->update(['is_finish' => true]);
 
-        // Log::info(ExamScoringService::calculate(
-        //     $user->id, 
-        //     $examId,
-        // ));
+        ExamScoringService::calculate(
+            $user->id, 
+            $courseId,
+            $examId,
+        );
 
         Cache::forget("exam_{$examId}_user_{$user->id}_shuffled_ids");
 
