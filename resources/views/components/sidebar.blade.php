@@ -51,7 +51,7 @@
             </a>
         </li>
         <li class="nav-item">
-            <a class="nav-link" href="#">
+            <a class="nav-link" href="/reports">
                 <i class="bi bi-file-earmark-text me-2"></i> Laporan
             </a>
         </li>
@@ -172,14 +172,14 @@
 
     const urlParams = new URLSearchParams(window.location.search);
     const currentPage = urlParams.get('page') || 1;
-    
+    console.log(currentPage);
     const questionLinks = document.querySelectorAll('.question-number');
-    
-    questionLinks.forEach(link => {
+    questionLinks.forEach((link, key) => {
+        const answered = localStorage.getItem(`quest${key+1}`);
         const questionNumber = parseInt(link.innerText);
         
         // Bandingkan dengan currentPage
-        if (questionNumber == currentPage) {
+        if (questionNumber == currentPage || answered) {
             link.classList.add('active');
         } else {
             link.classList.remove('active');

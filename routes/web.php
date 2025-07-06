@@ -6,10 +6,9 @@ use App\Http\Controllers\ExamController;
 use App\Http\Controllers\MaterialController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\QuestionController;
-use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Redirect;
+use App\Http\Controllers\ReportController;
+use App\Models\Course;
 use Illuminate\Support\Facades\Route;
-use function Pest\Laravel\withoutMiddleware;
 
 
 Route::controller(AuthController::class)
@@ -26,13 +25,14 @@ Route::controller(AuthController::class)
         Route::get('/logout', 'logout')
         ->name('logout')
         ->withoutMiddleware('guest')
-        ->middleware('auth');
+        ->middleware(['auth', 'EnsureKeepExam']);
     });
     
-Route::middleware('auth')
+Route::middleware(['auth', 'EnsureKeepExam'])
     ->group(function() {
+        
         Route::get('/', function () {
-            return view('pages/dashboard');
+            return view('pages/dashboard', ['courses' => Course::all()]);
         });
 
         Route::singleton('profile', ProfileController::class);
@@ -42,15 +42,27 @@ Route::middleware('auth')
         Route::resource('courses.materials', MaterialController::class)
             ->except(['index', 'show']);
 
-        Route::post('/courses/{courseId}/exams/{examId}',[ExamController::class, 'submit'])
-            ->name('courses.exams.submit');
+        Route::post('/courses/{course}/exams/{exam}',[ExamController::class, 'submit'])
+            ->name('courses.exams.submit')
+            ->middleware(['EnsurePreExam'])
+            ->withoutMiddleware('EnsureKeepExam');
+        Route::get('/courses/{course}/exams/{exam}/finish',[ExamController::class, 'finish'])
+            ->name('courses.exams.finish')
+            ->middleware('EnsurePreExam')
+            ->withoutMiddleware('EnsureKeepExam');
         Route::resource('courses.exams', ExamController::class)
-            ->except(['index']);
+            ->except(['index'])
+            ->middlewareFor('show', 'EnsurePreExam')
+            ->withoutMiddlewareFor('show', 'EnsureKeepExam');
 
         Route::resource('courses.exams.questions', QuestionController::class)
             ->except(['index', 'create', 'show', 'edit']);
 
+        Route::get('/reports', [ReportController::class, 'index'])
+            ->name('reports.index');
 });
 
 
-
+// edit materi
+// edit question dan option via change event radio button
+// perbaiki storage user profile

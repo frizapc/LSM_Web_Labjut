@@ -82,7 +82,6 @@
         </div>
     </div>
 
-    <!-- Add this right after the closing </form> tag of the exam edit form -->
     <div class="card shadow border-0 mt-4">
         <div class="card-header bg-purple text-white d-flex justify-content-between align-items-center">
             <h5 class="mb-0">

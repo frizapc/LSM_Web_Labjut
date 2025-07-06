@@ -4,6 +4,13 @@
 
 @section('content')
 <div class="container-fluid py-4">
+    @if(session('warning'))
+        <div class="alert alert-warning alert-dismissible fade show" role="alert">
+            <i class="bi bi-exclamation-triangle-fill me-2"></i>
+            {{ session('warning') }}
+            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+        </div>
+    @endif
     <div class="card shadow border-0 h-100">
         <div class="card-header bg-purple text-white">
             <div class="d-flex justify-content-between align-items-center">
@@ -54,21 +61,21 @@
                     <!-- Navigation & Submit -->
                     <div class="d-flex justify-content-between mt-4">
                         @if($questions->currentPage() > 1)
-                            <button type="submit" name="action" value="{{ $questions->previousPageUrl() }}" class="btn btn-purple">
+                            <a href="{{ $questions->previousPageUrl() }}" class="btn btn-purple">
                                 <i class="bi bi-chevron-left ms-1"></i>
                                 Sebelumnya
-                            </button>
+                            </a>
                         @else
-                            <span></span> <!-- Spacer -->
+                            <span></span>
                         @endif
 
                         @if($questions->currentPage() < $questions->lastPage())
-                            <button type="submit" name="action" value="{{ $questions->nextPageUrl() }}" class="btn btn-purple">
+                            <a href="{{ $questions->nextPageUrl() }}" class="btn btn-purple">
                                 Selanjutnya <i class="bi bi-chevron-right ms-1"></i>
-                            </button>
+                            </a>
                         @else
-                            <button type="submit" name="action" value="finish" class="btn btn-danger">
-                                <i class="bi bi-stop-circle me-1"></i> Selesaikan Ujian
+                            <button id="finish-btn" type="button" class="btn btn-danger">
+                                <i class="bi bi-stop-circle me-1"></i> AKhiri Ujian
                             </button>
                         @endif
                     </div>
@@ -124,6 +131,39 @@
 </style>
 
 <script>
+document.addEventListener('DOMContentLoaded', () => {
+    let answered = localStorage.getItem(
+        "quest{{ $questions->currentPage() }}"
+    );
+
+    if(answered){
+        let radio = document.getElementById(`option_${answered}`);
+        radio.checked = true;
+        radio.closest('.form-check').classList.add('selected');
+
+    }
+
+    const finishBtn = document.getElementById('finish-btn');
+    if(finishBtn){
+        finishBtn.addEventListener('click', () => {
+            fetch("{{ route('courses.exams.finish', [$course->id, $exam->id]) }}",{
+                method: 'GET',
+                headers: {
+                    'X-CSRF-TOKEN': '{{ csrf_token() }}'
+                }
+            })
+            .then(response => {
+                localStorage.clear();
+                clearInterval(timer);
+                if (response.redirected) {
+                    window.location.href = response.url;
+                }
+            })
+            .catch(error => console.error('Logout error:', error));
+        });
+    }
+})
+
 document.querySelectorAll('input[type="radio"][name="answer"]').forEach((radio) => {
     radio.addEventListener('change', () => {
         document.querySelectorAll('.form-check').forEach((el) => el.classList.remove('selected'));
@@ -142,7 +182,9 @@ document.querySelectorAll('input[type="radio"][name="answer"]').forEach((radio) 
         })
         .then(response => response.json())
         .then(data => {
-            console.log('Jawaban disimpan:', data);
+            localStorage.setItem("quest{{ $questions->currentPage() }}", data.answered);
+            console.log(data);
+            console.log('Jawaban disimpan!');
         })
         .catch(error => console.error('Gagal menyimpan jawaban:', error));
     });
@@ -153,16 +195,17 @@ const icon = document.querySelector('.bi-clock');
 const textNode = icon.nextSibling;
 const updateTimer = () => {
     if (remainingSeconds <= 0) {
-        clearInterval(timer);
         textNode.nodeValue = "00:00";
-        
-        fetch("{{ route('logout') }}", {
+
+        fetch("{{ route('courses.exams.finish', [$course->id, $exam->id]) }}", {
             method: 'GET',
             headers: {
                 'X-CSRF-TOKEN': '{{ csrf_token() }}'
-            },
+            }
         })
         .then(response => {
+            localStorage.clear();
+            clearInterval(timer);
             if (response.redirected) {
                 window.location.href = response.url;
             }

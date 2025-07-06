@@ -2,12 +2,17 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Answer;
 use App\Models\Course;
 use App\Models\Exam;
+use App\Models\Option;
 use App\Models\Question;
 use App\Models\SessionExam;
-use Carbon\Carbon;
+use App\Services\ExamScoringService;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Cache;
+use Illuminate\Support\Facades\Log;
+use Psy\CodeCleaner\ReturnTypePass;
 
 class ExamController extends Controller
 {
@@ -50,25 +55,54 @@ class ExamController extends Controller
     public function show(Request $request,  $courseId, $examId)
     {
         $course = Course::findOrFail($courseId);
-        
+
         $exam = Exam::whereBelongsTo($course)
         ->findOrFail($examId);
-        
-        $questions = Question::where('exam_id', $exam->id)->paginate(1);
         
         $user = $request->user();
         
         $sessionExam = SessionExam::firstOrCreate(
-            [
-                'user_id' => $user->id,
-                'exam_id' => $examId,
-            ],
-            [
-                'completed_at' => now()->addMinutes($exam->duration),
+        [
+            'user_id' => $user->id,
+            'exam_id' => $examId,
+        ],
+        [
+            'completed_at' => now()->addMinutes($exam->duration),
             ]
         );
-        
+            
         $timeLeft = now()->diffInSeconds($sessionExam->completed_at);
+            
+        $questionIds = Question::where('exam_id', $exam->id)
+            ->pluck('id')
+            ->toArray();
+
+        $cacheName = "exam_{$exam->id}_user_{$user->id}_shuffled_ids";
+        session(['cacheName' => $cacheName]);
+            
+        $shuffledIds = Cache::remember(
+                $cacheName, 
+                now()->addMinutes($exam->duration), 
+                function () use ($questionIds) {
+            return collect($questionIds)
+            ->shuffle()
+            ->values()
+            ->all();
+        });
+
+        $currentPage = $request->get('page', 1);
+        $currentQuestionId = $shuffledIds[$currentPage - 1] ?? null;
+
+        $question = Question::findOrFail($currentQuestionId);
+
+        $questions = new \Illuminate\Pagination\LengthAwarePaginator(
+            [$question],
+            count($shuffledIds),
+            1,
+            $currentPage,
+            ['path' => $request->url(), 'query' => $request->query()]
+        );
+
 
         return view('pages.exams.show', [
             'course' => $course,
@@ -137,13 +171,53 @@ class ExamController extends Controller
     }
 
     public function submit(Request $request, $courseId, $examId){
-        
-        if($request->action){
-            return redirect($request->action);
+        $user = $request->user();
+        $exam = Exam::findOrFail($examId);
+        $option = Option::findOrFail($request->answer);
+
+        if($option){
+            Answer::firstOrCreate([
+                'user_id' => $user->id,
+                'exam_id' => $exam->id,
+                'question_id' => $option->question_id,
+            ],[
+                'user_id' => $user->id,
+                'exam_id' => $exam->id,
+                'question_id' => $option->question_id,
+                'option_id' => $request->answer,
+            ])->update(['option_id' => $request->answer]);
+        } else {
+            Answer::where([
+                ['user_id', "=", $user->id],
+                ['question_id', "=", $option->question_id],
+            ])->delete();
         }
+
         return response()->json([
             'status' => 'saved',
-            'message' => 'Jawaban disimpan sementara.'
+            'question_id' => $option->question_id,
+            'answered' => $request->answer,
         ]);
+    }
+
+    public function finish(Request $request, $courseId, $examId)
+    {
+        $user = $request->user();
+
+        SessionExam::where([
+            ['user_id', $user->id],
+            ['exam_id', $examId]
+        ])->update(['is_finish' => true]);
+
+        ExamScoringService::calculate(
+            $user->id, 
+            $courseId,
+            $examId,
+        );
+
+        Cache::forget("exam_{$examId}_user_{$user->id}_shuffled_ids");
+
+        return redirect()
+            ->route('courses.show', $courseId);
     }
 }

@@ -1,7 +1,7 @@
 <?php
 
-use App\Http\Middleware\EnsureCourseIdFound;
-use App\Http\Middleware\EnsureMaterialIdFound;
+use App\Http\Middleware\EnsureKeepExam;
+use App\Http\Middleware\EnsurePreExam;
 use Illuminate\Foundation\Application;
 use Illuminate\Foundation\Configuration\Exceptions;
 use Illuminate\Foundation\Configuration\Middleware;
@@ -14,7 +14,10 @@ return Application::configure(basePath: dirname(__DIR__))
         health: '/up',
     )
     ->withMiddleware(function (Middleware $middleware) {
-        $middleware->alias([]);
+        $middleware->alias([
+            'EnsurePreExam' =>EnsurePreExam::class,
+            'EnsureKeepExam' =>EnsureKeepExam::class,
+        ]);
     })
     ->withExceptions(function (Exceptions $exceptions) {
         $exceptions->render(function (MethodNotAllowedHttpException $e) {
