@@ -47,23 +47,45 @@ class MaterialController extends Controller
     /**
      * Show the form for editing the specified resource.
      */
-    public function edit(string $id)
+    public function edit($courseId, $materialId)
     {
-        //
+        $course = Course::findOrFail($courseId);
+        $material = Material::findOrFail($materialId);
+        return view('pages.materials.edit', [
+            'course' => $course,
+            'material' => $material,
+        ]);
     }
 
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, string $id)
+    public function update(Request $request, $courseId, $materialId)
     {
-        //
+        Course::findOrFail($courseId);
+        $material = Material::findOrFail($materialId);
+
+        $request->validate([
+            'name' => 'required|string|max:50',
+            'description' => 'nullable|string',
+            'source' => 'nullable|file|mimes:pdf|max:1024'
+        ]);
+
+        $material->update([
+            'name' => $request->name,
+            'description' => $request->description,
+            'source' => $request->file('source'),
+        ]);
+
+        return redirect()
+            ->route('courses.show', $courseId)
+            ->with('success', 'Materi berhasil diperbarui!');
     }
 
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(string $courseId, $materialId)
+    public function destroy($courseId, $materialId)
     {
         $course = Course::findOrFail($courseId);
         $material = Material::whereBelongsTo($course)

@@ -72,12 +72,12 @@ class QuestionController extends Controller
         try {
             DB::transaction(function () use ($request, $validated, $courseId, $examId, $questionId) {
                 // Verifikasi relasi sekaligus
-                $question = Question::where('id', $questionId)
-                    ->where('exam_id', $examId)
-                    ->whereHas('exam', function($q) use ($courseId) {
-                        $q->where('course_id', $courseId);
-                    })
-                    ->firstOrFail();
+                $question = Question::where([
+                    ['id', "=", $questionId],
+                    ['exam_id', "=", $examId],
+                ])->whereHas('exam', function($q) use ($courseId) {
+                    $q->where('course_id', $courseId);
+                })->firstOrFail();
     
                 // Update pertanyaan
                 $question->update(['question_text' => $validated['question_text']]);

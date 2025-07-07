@@ -61,8 +61,3 @@ Route::middleware(['auth', 'EnsureKeepExam'])
         Route::get('/reports', [ReportController::class, 'index'])
             ->name('reports.index');
 });
-
-
-// edit materi
-// edit question dan option via change event radio button
-// perbaiki storage user profile

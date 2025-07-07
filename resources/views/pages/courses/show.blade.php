@@ -24,7 +24,7 @@
             <div class="card shadow border-0 h-100">
                 <div class="card-header bg-purple text-white">
                     <h5 class="mb-0">
-                        <i class="bi bi-image me-2"></i>Foto Kursus
+                        <i class="bi bi-image me-2"></i>Gambar Kursus
                     </h5>
                 </div>
                 <div class="card-body text-center">
@@ -212,6 +212,12 @@
                                                 data-bs-toggle="tooltip" 
                                                 title="Baca Materi">
                                                     <i class="bi bi-file-earmark-pdf"></i>
+                                                </a>
+                                                <a href="{{ route('courses.materials.edit', [$course->id, $material->id]) }}" 
+                                                class="btn btn-sm btn-outline-primary"
+                                                data-bs-toggle="tooltip"
+                                                title="Edit Ujian">
+                                                    <i class="bi bi-pencil-square"></i>
                                                 </a>
                                                 <form action="{{ route('courses.materials.destroy', [$course->id, $material->id]) }}" method="POST">
                                                     @csrf
