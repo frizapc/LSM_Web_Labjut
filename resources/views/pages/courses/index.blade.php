@@ -18,9 +18,11 @@
                 <h5 class="mb-0">
                     <i class="bi bi-book me-2"></i>Daftar Kursus
                 </h5>
+                @can('create', App\Models\Course::class)
                 <a href="{{ route('courses.create') }}" class="btn btn-light-purple">
                     <i class="bi bi-plus-circle me-1"></i> Tambah Baru
                 </a>
+                @endcan
             </div>
         </div>
         <div class="card-body">

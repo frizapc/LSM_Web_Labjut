@@ -172,7 +172,6 @@
 
     const urlParams = new URLSearchParams(window.location.search);
     const currentPage = urlParams.get('page') || 1;
-    console.log(currentPage);
     const questionLinks = document.querySelectorAll('.question-number');
     questionLinks.forEach((link, key) => {
         const answered = localStorage.getItem(`quest${key+1}`);

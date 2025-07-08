@@ -49,7 +49,7 @@
                     
                     <input type="file" class="form-control border-purple @error('photo') is-invalid @enderror" 
                            id="photo" name="photo" accept="image/*">
-                    <div class="form-text text-muted">Format: JPG, PNG (Maksimal 1MB)</div>
+                    <div class="form-text text-muted">Maksimal 1MB</div>
                     @error('photo')
                         <div class="invalid-feedback">{{ $message }}</div>
                     @enderror

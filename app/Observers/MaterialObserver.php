@@ -16,11 +16,16 @@ class MaterialObserver
     }
 
     /**
-     * Handle the Material "updated" event.
+     * Handle the Material "updating" event.
      */
-    public function updated(Material $material): void
+    public function updating(Material $material): void
     {
-        //
+        if ($material->source) {
+            Storage::delete($material->getOriginal('source'));
+            $material->source = $material->source->store('materials');
+        } else {
+            $material->source = $material->getOriginal('source');
+        }
     }
 
     /**

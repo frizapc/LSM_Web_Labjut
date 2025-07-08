@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\Course;
 use App\Models\Material;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Gate;
 
 class MaterialController extends Controller
 {
@@ -14,6 +15,7 @@ class MaterialController extends Controller
     public function create($courseId)
     {
         $course = Course::findOrFail($courseId);
+        Gate::authorize('create', Course::class);
         return view('pages.materials.create', [
             'course' => $course,
         ]);
@@ -47,28 +49,51 @@ class MaterialController extends Controller
     /**
      * Show the form for editing the specified resource.
      */
-    public function edit(string $id)
+    public function edit($courseId, $materialId)
     {
-        //
+        $course = Course::findOrFail($courseId);
+        Gate::authorize('update', $course);
+        $material = Material::findOrFail($materialId);
+        return view('pages.materials.edit', [
+            'course' => $course,
+            'material' => $material,
+        ]);
     }
 
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, string $id)
+    public function update(Request $request, $courseId, $materialId)
     {
-        //
+        Course::findOrFail($courseId);
+        $material = Material::findOrFail($materialId);
+
+        $request->validate([
+            'name' => 'required|string|max:50',
+            'description' => 'nullable|string',
+            'source' => 'nullable|file|mimes:pdf|max:1024'
+        ]);
+
+        $material->update([
+            'name' => $request->name,
+            'description' => $request->description,
+            'source' => $request->file('source'),
+        ]);
+
+        return redirect()
+            ->route('courses.show', $courseId)
+            ->with('success', 'Materi berhasil diperbarui!');
     }
 
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(string $courseId, $materialId)
+    public function destroy($courseId, $materialId)
     {
         $course = Course::findOrFail($courseId);
-        $material = Material::whereBelongsTo($course)
-            ->findOrFail($materialId);
-        $material
+        Gate::authorize('delete', $course);
+        Material::whereBelongsTo($course)
+            ->findOrFail($materialId)
             ->delete();
         return redirect()
             ->route('courses.show', $courseId)

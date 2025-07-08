@@ -11,8 +11,8 @@ use App\Models\SessionExam;
 use App\Services\ExamScoringService;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Cache;
+use Illuminate\Support\Facades\Gate;
 use Illuminate\Support\Facades\Log;
-use Psy\CodeCleaner\ReturnTypePass;
 
 class ExamController extends Controller
 {
@@ -21,6 +21,7 @@ class ExamController extends Controller
      */
     public function create($courseId)
     {
+        Gate::authorize('create', Course::class);
         $course = Course::findOrFail($courseId);
         return view('pages.exams.create', [
             'course' => $course,
@@ -118,7 +119,7 @@ class ExamController extends Controller
     public function edit(string $courseId, $examId)
     {
         $course = Course::findOrFail($courseId);
-
+        Gate::authorize('update', $course);
         $exam = Exam::whereBelongsTo($course)
             ->findOrFail($examId);
 
@@ -161,9 +162,9 @@ class ExamController extends Controller
     public function destroy(string $courseId, $examId)
     {
         $course = Course::findOrFail($courseId);
-        $exam = Exam::whereBelongsTo($course)
-            ->findOrFail($examId);
-        $exam
+        Gate::authorize('delete', $course);
+        Exam::whereBelongsTo($course)
+            ->findOrFail($examId)
             ->delete();
         return redirect()
             ->route('courses.show', $courseId)

@@ -22,7 +22,7 @@ class ProfileObserver
     {
         if ($user->photo) {
             Storage::delete($user->getOriginal('photo') ?: '');
-            $user->photo = $user->photo->store('users');
+            $user->photo = $user->photo->store('profiles');
         } else {
             $user->photo = $user->getOriginal('photo');
         }

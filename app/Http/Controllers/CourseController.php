@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Course;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Gate;
 
 class CourseController extends Controller
 {
@@ -21,6 +22,7 @@ class CourseController extends Controller
      */
     public function create()
     {
+        Gate::authorize('create', Course::class);
         return view('pages.courses.create');
     }
 
@@ -63,6 +65,7 @@ class CourseController extends Controller
     public function edit(string $id)
     {
         $course = Course::findOrFail($id);
+        Gate::authorize('update', $course);
         return view('pages.courses.edit', compact('course'));
     }
 
@@ -97,7 +100,9 @@ class CourseController extends Controller
      */
     public function destroy(string $id)
     {
-        $course = Course::findOrFail($id)->delete();
+        $course = Course::findOrFail($id);
+        Gate::authorize('delete', $course);
+        $course->delete();
         return redirect()
             ->route('courses.index')
             ->with('success', 'Kursus berhasil dihapus');

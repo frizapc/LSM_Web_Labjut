@@ -10,8 +10,10 @@ use App\Observers\CourseObserver;
 use App\Observers\MaterialObserver;
 use App\Observers\ProfileObserver;
 use App\Observers\QuestionObserver;
+use App\Policies\CoursePolicy;
 use Carbon\Carbon;
 use Illuminate\Pagination\Paginator;
+use Illuminate\Support\Facades\Gate;
 use Illuminate\Support\ServiceProvider;
 
 class AppServiceProvider extends ServiceProvider
@@ -35,5 +37,7 @@ class AppServiceProvider extends ServiceProvider
         Material::observe(MaterialObserver::class);
         Question::observe(QuestionObserver::class);
         Carbon::setLocale('id');
+
+        Gate::policy(Course::class, CoursePolicy::class);
     }
 }

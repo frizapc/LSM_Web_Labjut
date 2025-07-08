@@ -2,10 +2,12 @@
 
 namespace App\Http\Middleware;
 
+use App\Models\Course;
 use App\Models\Exam;
 use App\Models\SessionExam;
 use Closure;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Gate;
 use Symfony\Component\HttpFoundation\Response;
 
 class EnsurePreExam
@@ -17,10 +19,10 @@ class EnsurePreExam
      */
     public function handle(Request $request, Closure $next): Response
     {
-        
+        $ability = Gate::allows('create', Course::class);
         $user = $request->user();
         $examId = $request->exam;
-        $courseId = $request->course;
+        $course = Course::findOrFail($request->course);
         $exam = Exam::findOrFail($examId);
         $sessionExam = SessionExam::where([
             ['user_id', "=", $user->id],
@@ -30,12 +32,12 @@ class EnsurePreExam
         if($sessionExam){
             if(!$exam->is_active || $sessionExam->is_finish){
                 return redirect()
-                    ->route('courses.show', $courseId)
+                    ->route('courses.show', $course->id)
                     ->with('warning', 'Tidak dapat memulai ujian');
             }
-        } elseif (!$exam->is_active){
+        } elseif (!$exam->is_active || $ability){
             return redirect()
-                    ->route('courses.show', $courseId)
+                    ->route('courses.show', $course->id)
                     ->with('warning', 'Tidak dapat memulai ujian');
         }
         
