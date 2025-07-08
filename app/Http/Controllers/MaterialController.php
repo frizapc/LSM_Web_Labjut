@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\Course;
 use App\Models\Material;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Gate;
 
 class MaterialController extends Controller
 {
@@ -14,6 +15,7 @@ class MaterialController extends Controller
     public function create($courseId)
     {
         $course = Course::findOrFail($courseId);
+        Gate::authorize('create', Course::class);
         return view('pages.materials.create', [
             'course' => $course,
         ]);
@@ -50,6 +52,7 @@ class MaterialController extends Controller
     public function edit($courseId, $materialId)
     {
         $course = Course::findOrFail($courseId);
+        Gate::authorize('update', $course);
         $material = Material::findOrFail($materialId);
         return view('pages.materials.edit', [
             'course' => $course,
@@ -88,9 +91,9 @@ class MaterialController extends Controller
     public function destroy($courseId, $materialId)
     {
         $course = Course::findOrFail($courseId);
-        $material = Material::whereBelongsTo($course)
-            ->findOrFail($materialId);
-        $material
+        Gate::authorize('delete', $course);
+        Material::whereBelongsTo($course)
+            ->findOrFail($materialId)
             ->delete();
         return redirect()
             ->route('courses.show', $courseId)

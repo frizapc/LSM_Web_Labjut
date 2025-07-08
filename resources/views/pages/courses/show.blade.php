@@ -119,17 +119,20 @@
                                     </div>
 
                                     <div class="mt-4">
+                                        @can(['update', 'delete'], $course)
                                         <a class="btn btn-purple w-100" href="{{ route('courses.edit', $course->id) }}">
                                             <i class="bi bi-pencil-square me-1"></i> Edit Kursus
                                         </a>
+                                        
                                         <form action="{{ route('courses.destroy', $course->id) }}" method="POST" class="d-inline">
-                                          @csrf
-                                          @method('DELETE')
-                                          <button type="submit" class="btn btn-outline-purple w-100 mt-2"
-                                                  onclick="return confirm('Hapus kursus {{ $course->name }}?')">
-                                              <i class="bi bi-trash me-1"></i> Hapus
-                                          </button>
-                                      </form>
+                                            @csrf
+                                            @method('DELETE')
+                                            <button type="submit" class="btn btn-outline-purple w-100 mt-2"
+                                                    onclick="return confirm('Hapus kursus {{ $course->name }}?')">
+                                                <i class="bi bi-trash me-1"></i> Hapus
+                                            </button>
+                                        </form>
+                                        @endcan
                                     </div>
                                 </div>
                             </div>
@@ -166,9 +169,11 @@
                     <h5 class="mb-0">
                         <i class="bi bi-journal-bookmark me-2"></i>Materi
                     </h5>
+                    @can('create', App\Models\Course::class)
                     <a href="{{ route('courses.materials.create', $course->id) }}" class="btn btn-sm btn-light-purple">
                         <i class="bi bi-plus-circle me-1"></i> Tambah Materi
                     </a>
+                    @endcan
                 </div>
                 <div class="card-body">
                     @if($course->materials->isEmpty())
@@ -185,7 +190,7 @@
                                         <th class="text-purple">Judul</th>
                                         <th class="text-purple">Deskripsi</th>
                                         <th class="text-purple">Ditambahkan</th>
-                                        <th class="text-purple">Aksi</th>
+                                        <th class="text-purple">{{ Auth::user()->role == 'Siswa' ? 'Lihat':'Aksi' }}</th>
                                     </tr>
                                 </thead>
                                 <tbody>
@@ -213,6 +218,7 @@
                                                 title="Baca Materi">
                                                     <i class="bi bi-file-earmark-pdf"></i>
                                                 </a>
+                                                @can(['update', 'delete'], $course)
                                                 <a href="{{ route('courses.materials.edit', [$course->id, $material->id]) }}" 
                                                 class="btn btn-sm btn-outline-primary"
                                                 data-bs-toggle="tooltip"
@@ -230,6 +236,7 @@
                                                         <i class="bi bi-trash"></i>
                                                     </button>
                                                 </form>
+                                                @endcan
                                             </div>
                                         </td>
                                     </tr>
@@ -251,9 +258,11 @@
                     <h5 class="mb-0">
                         <i class="bi bi-clipboard2-check me-2"></i>Ujian
                     </h5>
+                    @can(['update', 'delete'], $course)
                     <a href="{{ route('courses.exams.create', $course->id) }}" class="btn btn-sm btn-light-purple">
                         <i class="bi bi-plus-circle me-1"></i> Tambah Ujian
                     </a>
+                    @endcan
                 </div>
                 <div class="card-body">
                     @if($course->exams->isEmpty())
@@ -272,7 +281,7 @@
                                         <th class="text-purple">Durasi</th>
                                         <th class="text-purple">Soal</th>
                                         <th class="text-purple">Status</th>
-                                        <th class="text-purple">Aksi</th>
+                                        <th class="text-purple">{{ Auth::user()->role == 'Siswa' ? 'Mulai':'Aksi' }}</th>
                                     </tr>
                                 </thead>
                                 <tbody>
@@ -298,6 +307,7 @@
                                         </td>
                                         <td>
                                             <div class="d-flex gap-2">
+                                                @cannot(['update', 'delete'], $course)
                                                 <button class="btn btn-sm btn-outline-purple"
                                                 data-bs-toggle="modal" 
                                                 data-bs-target="#startExamModal-{{ $exam->id }}"
@@ -305,6 +315,7 @@
                                                 title="Mulai Ujian">
                                                     <i class="bi bi-stopwatch-fill"></i>
                                                 </button>
+                                                @else
                                                 <a href="{{ route('courses.exams.edit', [$course->id, $exam->id]) }}" 
                                                 class="btn btn-sm btn-outline-primary"
                                                 data-bs-toggle="tooltip"
@@ -322,6 +333,7 @@
                                                         <i class="bi bi-trash"></i>
                                                     </button>
                                                 </form>
+                                                @endcan
                                             </div>
 
                                             <!-- Modal -->

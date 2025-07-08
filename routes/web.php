@@ -44,7 +44,7 @@ Route::middleware(['auth', 'EnsureKeepExam'])
 
         Route::post('/courses/{course}/exams/{exam}',[ExamController::class, 'submit'])
             ->name('courses.exams.submit')
-            ->middleware(['EnsurePreExam'])
+            ->middleware('EnsurePreExam')
             ->withoutMiddleware('EnsureKeepExam');
         Route::get('/courses/{course}/exams/{exam}/finish',[ExamController::class, 'finish'])
             ->name('courses.exams.finish')
