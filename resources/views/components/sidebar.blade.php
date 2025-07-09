@@ -1,4 +1,4 @@
-<div class="sidebar mt-5 vh-100 fixed-top z-1">
+<div class="sidebar mt-lg-5 vh-100 fixed-top z-1">
     @auth
     @if(request()->routeIs('courses.exams.show'))
     <div class="my-2 text-center">
@@ -19,8 +19,6 @@
                         $questionNumber = $i * 5 + $j;
                         if($questionNumber > $totalQuestions) break;
                     @endphp
-                    
-                    
                     <a href="{{ route('courses.exams.show', [$course->id, $exam->id, 'page' => $questionNumber]) }}"
                         class="nav-link border border-white fw-bold question-number">
                         {{ $questionNumber }}
@@ -60,6 +58,21 @@
                 <i class="bi bi-gear me-2"></i> Pengaturan
             </a>
         </li>
+        <div class="account-set w-100 position-absolute bottom-0">
+            <li class="nav-item">
+                <a class="nav-link" href="{{ route('profile.edit') }}">
+                    <i class="bi bi-person-circle me-2"></i> Profil
+                </a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" href="{{ route('logout') }}">
+                    <i class="bi bi-box-arrow-right me-2"></i> Logout
+                </a>
+                <form id="logout-form" action="{{ route('logout') }}" method="POST" class="d-none">
+                    @csrf
+                </form>
+            </li>
+        </div>
     </ul>
     @endif
     @endauth
@@ -109,79 +122,71 @@
         color: white;
         font-weight: bold;
     }
+
+    .account-set{
+        margin-bottom: 4.2rem;
+    }
 </style>
 
 <script>
-    document.addEventListener('DOMContentLoaded', function() {
+document.addEventListener('DOMContentLoaded', function() {
     const path = window.location.pathname;
-    
     const navLinks = document.querySelectorAll('.nav-link');
-    navLinks.forEach(link => {
-        link.classList.remove('active');
-    });
     
-    if (path === '/' || path === '/dashboard') {
-        const dashboardLink = Array.from(navLinks).find(link => 
-            link.textContent.includes('Dashboard') || 
-            link.querySelector('.bi-speedometer2')
-        );
-        if (dashboardLink) dashboardLink.classList.add('active');
-    } else if (path.startsWith('/courses')) {
-
-        const kursusLink = Array.from(navLinks).find(link => 
-            link.textContent.includes('Kursus') || 
-            link.querySelector('.bi-box-seam')
-        );
-        if (kursusLink) kursusLink.classList.add('active');
-    } else if (path.startsWith('/users')) {
-
-        const penggunaLink = Array.from(navLinks).find(link => 
-            link.textContent.includes('Pengguna') || 
-            link.querySelector('.bi-people')
-        );
-        if (penggunaLink) penggunaLink.classList.add('active');
-    } else if (path.startsWith('/reports')) {
-
-        const laporanLink = Array.from(navLinks).find(link => 
-            link.textContent.includes('Laporan') || 
-            link.querySelector('.bi-file-earmark-text')
-        );
-        if (laporanLink) laporanLink.classList.add('active');
-    } else if (path.startsWith('/settings')) {
-
-        const pengaturanLink = Array.from(navLinks).find(link => 
-            link.textContent.includes('Pengaturan') || 
-            link.querySelector('.bi-gear')
-        );
-        if (pengaturanLink) pengaturanLink.classList.add('active');
-    } else if (path.startsWith('/login')) {
-
-        const pengaturanLink = Array.from(navLinks).find(link => 
-            link.textContent.includes('Login') || 
-            link.querySelector('.bi-box-arrow-in-right')
-        );
-        if (pengaturanLink) pengaturanLink.classList.add('active');
-    } else if (path.startsWith('/register')) {
-
-        const pengaturanLink = Array.from(navLinks).find(link => 
-            link.textContent.includes('Register') || 
-            link.querySelector('.bi-person-plus')
-        );
-        if (pengaturanLink) pengaturanLink.classList.add('active');
+    // Reset semua active class
+    navLinks.forEach(link => link.classList.remove('active'));
+    
+    // Fungsi untuk mencocokkan link
+    function findActiveLink(selector, textMatch, iconClass) {
+        const links = document.querySelectorAll(selector);
+        links.forEach(link => {
+            const linkText = link.textContent.trim().toLowerCase();
+            const hasIcon = link.querySelector(iconClass);
+            
+            if (linkText.includes(textMatch.toLowerCase()) || hasIcon) {
+                link.classList.add('active');
+            }
+        });
     }
 
+    // Cek path dan set active class
+    if (path === '/' || path === '/dashboard') {
+        findActiveLink('.nav-link', 'Dashboard', '.bi-speedometer2');
+    } 
+    else if (path.startsWith('/courses')) {
+        findActiveLink('.nav-link', 'Kursus', '.bi-box-seam');
+    }
+    else if (path.startsWith('/users')) {
+        findActiveLink('.nav-link', 'Pengguna', '.bi-people');
+    }
+    else if (path.startsWith('/reports')) {
+        findActiveLink('.nav-link', 'Laporan', '.bi-file-earmark-text');
+    }
+    else if (path.startsWith('/settings')) {
+        findActiveLink('.nav-link', 'Pengaturan', '.bi-gear');
+    }
+    else if (path.startsWith('/login')) {
+        findActiveLink('.nav-link', 'Login', '.bi-box-arrow-in-right');
+    }
+    else if (path.startsWith('/register')) {
+        findActiveLink('.nav-link', 'Register', '.bi-person-plus');
+    }
+    else if (path.startsWith('/profile')) {
+        console.log('Profile path detected');
+        findActiveLink('.nav-link', 'Profil', '.bi-person-circle');
+    }
+
+    // Logic untuk question numbers
     const urlParams = new URLSearchParams(window.location.search);
     const currentPage = urlParams.get('page') || 1;
     const questionLinks = document.querySelectorAll('.question-number');
-    questionLinks.forEach((link, key) => {
-        const answered = localStorage.getItem(`quest${key+1}`);
-        const questionNumber = parseInt(link.innerText);
+    
+    questionLinks.forEach((link) => {
+        const answered = localStorage.getItem(`quest${link.textContent}`);
+        const questionNumber = parseInt(link.textContent);
         
-        // Bandingkan dengan currentPage
         if (questionNumber == currentPage || answered) {
             link.classList.add('active');
-        } else {
-            link.classList.remove('active');
         }
     });
 });

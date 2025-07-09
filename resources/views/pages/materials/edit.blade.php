@@ -44,7 +44,7 @@
                         <div class="d-flex justify-content-between align-items-center">
                             <div>
                                 <i class="bi bi-file-earmark-pdf text-purple me-2"></i>
-                                <span>File saat ini: {{ basename($material->source) }}</span>
+                                <span>File saat ini:</span>
                             </div>
                             <a href="{{ asset('storage/'.$material->source) }}" target="_blank" class="btn btn-sm btn-purple">
                                 <i class="bi bi-eye me-1"></i> Lihat

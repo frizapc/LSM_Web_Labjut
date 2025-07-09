@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>@yield('title')</title>
     
     <!-- Bootstrap CSS -->
@@ -58,6 +58,10 @@
         .sidebar .nav-link.active {
             color: white;
             background-color: var(--purple-secondary);
+        }
+
+        .account-set {
+            display: none;
         }
         
         .main-content{
@@ -126,34 +130,57 @@
             background-color: #6a0dad;
             border-color: #6a0dad;
         }
-
+    
         .pagination .page-link {
             color:rgb(8, 8, 8);
         }
-        @media (max-width: 768px) {
+
+        @media (max-width: 992px) {
+            .navbar-brand {
+                font-size: 1rem;
+            }
+
             .sidebar {
-                width: 100%;
-                min-height: auto;
-                position: static;
+                background-color: var(--purple-dark);
+                width: 250px;
+                height: calc(100vh - 56px); 
+                position: fixed;
+                top: 56px;
+                left: -250px;
+                transition: all 0.3s ease;
+                z-index: 1000;
+                overflow-y: auto;
             }
+
             .sidebar.active {
-                margin-left: 0;
+                left: 0;
             }
+
+            .account-set {
+                display: block;
+            }
+
+            .main-content{
+                margin-left: 0px;
+            }
+
             .footer {
                 margin-left: 0;
                 width: 100%;
+                font-size: 0.8rem;
             }
         }
+        
     </style>
 </head>
 <body>
     @include('components.navbar')
     
-    <div class="d-flex">
+    <div>
         @include('components.sidebar')
         
         <div class="main-content">
-            <div class="main-wrapper position-relative">
+            <div class="main-wrapper">
                 @yield('content')
             </div>
             @include('components.footer')
@@ -167,8 +194,8 @@
     <!-- Custom JS -->
     <script>
         document.addEventListener('DOMContentLoaded', function() {
-            // Toggle sidebar on mobile
             document.getElementById('sidebarToggle').addEventListener('click', function() {
+                console.log('clicked')
                 document.querySelector('.sidebar').classList.toggle('active');
             });
         });

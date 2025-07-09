@@ -365,7 +365,7 @@
                                                                 </div>
                                                             </div>
                                                             
-                                                            <div class="alert alert-warning mt-3">
+                                                            <div class="text-wrap alert alert-warning mt-3">
                                                                 <i class="bi bi-exclamation-triangle-fill me-2"></i>
                                                                 Pastikan Anda sudah siap sebelum memulai ujian!
                                                             </div>
