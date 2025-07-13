@@ -36,7 +36,7 @@
                     <div class="col">
                         <div class="card h-100 course-card hover-scale">
                             <div class="position-relative">
-                                <img src="{{ Storage::url($course->photo) }}" class="card-img-top" alt="{{ $course->name }}" style="height: 180px; object-fit: cover;">
+                                <img src="{{ Storage::url($course->photo) }}" class="card-img-top" alt="{{ $course->name }}">
                                 <span class="badge bg-{{ $course->level == 'Pemula' ? 'info' : ($course->level == 'Menengah' ? 'warning' : 'danger') }} position-absolute top-0 end-0 m-2">
                                     {{ $course->level }}
                                 </span>
@@ -68,6 +68,8 @@
         </div>
     </div>
 </div>
-
-
 @endsection
+
+@push('styles')
+<link rel="stylesheet" href="{{ asset('css/courses-index.min.css') }}">
+@endpush

@@ -1,0 +1,17 @@
+.bi-journal-x{
+  font-size: 3rem;
+}
+.bg-purple-light {
+    background-color: rgba(106, 13, 173, 0.1);
+}
+.border-purple-light {
+    border-color: rgba(106, 13, 173, 0.2);
+}
+.accordion-button:not(.collapsed) {
+    background-color: rgba(106, 13, 173, 0.2);
+    color: #6a0dad;
+}
+.badge {
+    font-size: 0.9em;
+    padding: 0.35em 0.65em;
+}

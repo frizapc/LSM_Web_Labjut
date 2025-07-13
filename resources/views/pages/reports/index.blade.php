@@ -14,7 +14,7 @@
         <div class="card-body">
             @if($courses->isEmpty())
                 <div class="text-center py-4">
-                    <i class="bi bi-journal-x text-purple" style="font-size: 3rem;"></i>
+                    <i class="bi bi-journal-x text-purple"></i>
                     <h5 class="text-purple mt-3">Belum ada data laporan</h5>
                 </div>
             @else
@@ -112,21 +112,8 @@
         </div>
     </div>
 </div>
-
-<style>
-    .bg-purple-light {
-        background-color: rgba(106, 13, 173, 0.1);
-    }
-    .border-purple-light {
-        border-color: rgba(106, 13, 173, 0.2);
-    }
-    .accordion-button:not(.collapsed) {
-        background-color: rgba(106, 13, 173, 0.2);
-        color: #6a0dad;
-    }
-    .badge {
-        font-size: 0.9em;
-        padding: 0.35em 0.65em;
-    }
-</style>
 @endsection
+
+@push('styles')
+<link rel="stylesheet" href="{{ asset('css/reports-index.min.css') }}">
+@endpush

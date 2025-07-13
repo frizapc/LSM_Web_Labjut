@@ -44,7 +44,7 @@
                     <div class="mb-2">
                         <p class="small text-muted">Foto Saat Ini:</p>
                         <img src="{{ auth()->user()->photo ? Storage::url(auth()->user()->photo) : asset('images/default-profile.jpg') }}" 
-                             alt="Current Photo" class="img-thumbnail rounded-circle" style="width: 150px; height: 150px; object-fit: cover;">
+                             alt="Current Photo" class="img-thumbnail rounded-circle">
                     </div>
                     
                     <input type="file" class="form-control border-purple @error('photo') is-invalid @enderror" 
@@ -56,8 +56,7 @@
                     
                     <!-- Preview Foto Baru -->
                     <div class="mt-2">
-                        <img id="image-preview" src="#" alt="Preview" class="img-thumbnail rounded-circle d-none" 
-                             style="width: 150px; height: 150px; object-fit: cover;">
+                        <img id="image-preview" src="#" alt="Preview" class="img-thumbnail rounded-circle d-none">
                     </div>
                 </div>
                 
@@ -75,37 +74,12 @@
         </div>
     </div>
 </div>
-
-<script>
-    // Preview gambar sebelum upload
-    document.getElementById('photo').addEventListener('change', function(e) {
-        const preview = document.getElementById('image-preview');
-        const file = e.target.files[0];
-        
-        if (file) {
-            // Tampilkan label preview
-            const previewLabel = document.createElement('p');
-            previewLabel.className = 'small text-muted mt-2';
-            previewLabel.textContent = 'Preview Foto Baru:';
-            preview.parentNode.insertBefore(previewLabel, preview);
-            
-            // Validasi ukuran file
-            if (file.size > 2 * 1024 * 1024) {
-                alert('Ukuran file maksimal 2MB');
-                this.value = '';
-                return;
-            }
-            
-            // Tampilkan preview
-            const reader = new FileReader();
-            reader.onload = function(e) {
-                preview.src = e.target.result;
-                preview.classList.remove('d-none');
-            }
-            reader.readAsDataURL(file);
-        } else {
-            preview.classList.add('d-none');
-        }
-    });
-</script>
 @endsection
+
+@push('styles')
+<link rel="stylesheet" href="{{ asset('css/profiles-edit.min.css') }}">
+@endpush
+
+@push('scripts')
+<script src="{{ asset('js/profiles-edit.min.js') }}"></script>
+@endpush

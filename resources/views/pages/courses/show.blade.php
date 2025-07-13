@@ -27,11 +27,10 @@
                         <i class="bi bi-image me-2"></i>Gambar Kursus
                     </h5>
                 </div>
-                <div class="card-body text-center">
+                <div class="card-body course-detail text-center">
                     <img src="{{ Storage::url($course->photo) }}" 
                          alt="{{ $course->name }}" 
-                         class="img-fluid rounded shadow-lg"
-                         style="max-height: 300px; width: auto;">
+                         class="img-fluid rounded shadow-lg">
                 </div>
             </div>
         </div>
@@ -76,7 +75,7 @@
                                 </h5>
                                 <div class="d-flex align-items-center">
                                     <div class="bg-purple-light rounded-circle p-3 me-3">
-                                        <i class="bi bi-person-check-fill text-purple" style="font-size: 1.5rem;"></i>
+                                        <i class="bi bi-person-check-fill text-purple"></i>
                                     </div>
                                     <div>
                                         <h3 class="mb-0">{{ $course->students_count ?: 0 }}</h3>
@@ -97,12 +96,11 @@
                                     <div class="mb-3">
                                         <div class="d-flex justify-content-between mb-1">
                                             <span class="text-purple">Kapasitas</span>
-                                            <span class="text-purple">50%</span>
+                                            <span class="text-purple">30%</span>
                                         </div>
-                                        <div class="progress" style="height: 8px;">
+                                        <div class="progress">
                                             <div class="progress-bar bg-purple" 
-                                                 role="progressbar" 
-                                                 style="width: 50%"></div>
+                                                 role="progressbar"></div>
                                         </div>
                                     </div>
 
@@ -111,10 +109,9 @@
                                             <span class="text-purple">Penyelesaian</span>
                                             <span class="text-purple">30%</span>
                                         </div>
-                                        <div class="progress" style="height: 8px;">
+                                        <div class="progress">
                                             <div class="progress-bar bg-purple" 
-                                                 role="progressbar" 
-                                                 style="width: 30%"></div>
+                                                 role="progressbar"></div>
                                         </div>
                                     </div>
 
@@ -178,7 +175,7 @@
                 <div class="card-body">
                     @if($course->materials->isEmpty())
                         <div class="text-center py-4">
-                            <i class="bi bi-journal-x text-purple" style="font-size: 3rem;"></i>
+                            <i class="bi bi-journal-x text-purple"></i>
                             <h5 class="text-purple mt-3">{{'Belum ada materi tersedia'}}</h5>
                         </div>
                     @else
@@ -267,7 +264,7 @@
                 <div class="card-body">
                     @if($course->exams->isEmpty())
                         <div class="text-center py-4">
-                            <i class="bi bi-clipboard2-x text-purple" style="font-size: 3rem;"></i>
+                            <i class="bi bi-clipboard2-x text-purple"></i>
                             <h5 class="text-purple mt-3">Belum ada ujian tersedia</h5>
                         </div>
                     @else
@@ -391,38 +388,12 @@
         </div>
     </div>
 </div>
-
-<style>
-    .bg-purple-light {
-        background-color: rgba(106, 13, 173, 0.1);
-    }
-    .text-purple {
-        color: #6a0dad;
-    }
-    .btn-purple {
-        background-color: #6a0dad;
-        color: white;
-    }
-    .btn-outline-purple {
-        border-color: #6a0dad;
-        color: #6a0dad;
-    }
-    .btn-outline-purple:hover {
-        background-color: #6a0dad;
-        color: white;
-    }
-    .progress {
-        background-color: rgba(106, 13, 173, 0.2);
-    }
-    
-</style>
 @endsection
 
-@section('scripts')
-<script>
-    // Inisialisasi tooltip
-    $(document).ready(function(){
-        $('[data-bs-toggle="tooltip"]').tooltip();
-    });
-</script>
-@endsection
+@push('styles')
+<link rel="stylesheet" href="{{ asset('css/courses-show.min.css') }}">
+@endpush
+
+@push('scripts')
+<script src="{{ asset('js/courses-show.min.js') }}"></script>
+@endpush

@@ -4,7 +4,7 @@
 
 @section('content')
 <div class="container-fluid py-4">
-    <div class="card shadow border-0" style="min-height: 500px; overflow-y: auto;">
+    <div class="card shadow border-0">
         <div class="card-header bg-purple text-white">
             <h5 class="mb-0">
                 <i class="bi bi-pencil-square me-2"></i>Edit Materi {{ $material->name }}
@@ -60,7 +60,7 @@
                         <div class="invalid-feedback">{{ $message }}</div>
                     @enderror
                     <div class="mt-3">
-                        <iframe id="pdf-preview" src="#" class="w-100 d-none" style="height: 500px; border: 1px solid #dee2e6;"></iframe>
+                        <iframe id="pdf-preview" src="#" class="w-100 d-none"></iframe>
                     </div>
                 </div>
                 
@@ -78,44 +78,12 @@
         </div>
     </div>
 </div>
-
-<!-- JavaScript untuk preview PDF dan konfirmasi hapus -->
-<script>
-    // Preview PDF
-    document.getElementById('source').addEventListener('change', function(e) {
-        const preview = document.getElementById('pdf-preview');
-        const file = e.target.files[0];
-        
-        if (file && file.type === 'application/pdf') {
-            const reader = new FileReader();
-            
-            reader.onload = function(e) {
-                preview.src = e.target.result;
-                preview.classList.remove('d-none');
-            }
-            
-            reader.readAsDataURL(file);
-        } else {
-            preview.classList.add('d-none');
-            if (file) alert('Hanya file PDF yang diperbolehkan');
-        }
-    });
-
-    // Konfirmasi hapus
-    function confirmDelete() {
-        if (confirm('Apakah Anda yakin ingin menghapus materi ini?')) {
-            document.getElementById('deleteForm').submit();
-        }
-    }
-</script>
-
-<style>
-    .alert-purple-light {
-        background-color: rgba(106, 13, 173, 0.1);
-        border-color: rgba(106, 13, 173, 0.2);
-    }
-    .border-purple-light {
-        border-color: rgba(106, 13, 173, 0.2);
-    }
-</style>
 @endsection
+
+@push('styles')
+<link rel="stylesheet" href="{{ asset('css/materials-edit.min.css') }}">
+@endpush
+
+@push('scripts')
+<script src="{{ asset('js/materials-edit.min.js') }}"></script>
+@endpush
