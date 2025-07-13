@@ -1,0 +1,44 @@
+.bi-journal-x{
+    font-size: 3rem;
+}
+.question-card {
+    background-color: rgba(106, 13, 173, 0.05);
+    border-color: rgba(106, 13, 173, 0.2);
+}
+.form-check-input:checked {
+    background-color: #6a0dad;
+    border-color: #6a0dad;
+}
+.progress-bar {
+    transition: width 0.3s ease;
+}
+.option-item {
+    margin-bottom: 1rem;
+}
+.option-item label {
+    display: flex;
+    align-items: center;
+    padding: 1rem;
+    border: 2px solid #dee2e6;
+    border-radius: 0.5rem;
+    cursor: pointer;
+}
+.option-letter {
+    font-weight: bold;
+    color: #6a0dad;
+    margin-right: 1rem;
+    font-size: 1.2rem;
+}
+.alphabet-section{
+    width: 30px; 
+    height: 30px;
+}
+input:checked + label {
+    background-color: #6a0dad;
+    color: #dee2e6;
+    font-weight: bold;
+}
+.form-check.selected .alphabet-section {
+    background-color: #6a0dad;
+    color: white
+}

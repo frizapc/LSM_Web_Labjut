@@ -97,97 +97,13 @@
     @endguest
 </div>
 
-<style>
-    .question-numbers {
-        padding: 0.5rem;
-    }
-    
-    .question-number {
-        width: 40px;
-        height: 40px;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        margin: 0.25rem;
-        background-color: rgba(255, 255, 255, 0.1);
-        transition: all 0.2s;
-    }
-    
-    .question-number:hover {
-        background-color: rgba(255, 255, 255, 0.2);
-    }
-    
-    .question-number.active {
-        background-color: #6a0dad;
-        color: white;
-        font-weight: bold;
-    }
+@push('styles')
+<link href="{{ asset('css/sidebar.min.css') }}" rel="stylesheet">
+@endpush
 
-    .account-set{
-        margin-bottom: 4.2rem;
-    }
-</style>
+@push('scripts')
+<script src="{{ asset('js/sidebar.min.js') }}"></script>
+@endpush
 
-<script>
-document.addEventListener('DOMContentLoaded', function() {
-    const path = window.location.pathname;
-    const navLinks = document.querySelectorAll('.nav-link');
-    
-    // Reset semua active class
-    navLinks.forEach(link => link.classList.remove('active'));
-    
-    // Fungsi untuk mencocokkan link
-    function findActiveLink(selector, textMatch, iconClass) {
-        const links = document.querySelectorAll(selector);
-        links.forEach(link => {
-            const linkText = link.textContent.trim().toLowerCase();
-            const hasIcon = link.querySelector(iconClass);
-            
-            if (linkText.includes(textMatch.toLowerCase()) || hasIcon) {
-                link.classList.add('active');
-            }
-        });
-    }
 
-    // Cek path dan set active class
-    if (path === '/' || path === '/dashboard') {
-        findActiveLink('.nav-link', 'Dashboard', '.bi-speedometer2');
-    } 
-    else if (path.startsWith('/courses')) {
-        findActiveLink('.nav-link', 'Kursus', '.bi-box-seam');
-    }
-    else if (path.startsWith('/users')) {
-        findActiveLink('.nav-link', 'Pengguna', '.bi-people');
-    }
-    else if (path.startsWith('/reports')) {
-        findActiveLink('.nav-link', 'Laporan', '.bi-file-earmark-text');
-    }
-    else if (path.startsWith('/settings')) {
-        findActiveLink('.nav-link', 'Pengaturan', '.bi-gear');
-    }
-    else if (path.startsWith('/login')) {
-        findActiveLink('.nav-link', 'Login', '.bi-box-arrow-in-right');
-    }
-    else if (path.startsWith('/register')) {
-        findActiveLink('.nav-link', 'Register', '.bi-person-plus');
-    }
-    else if (path.startsWith('/profile')) {
-        console.log('Profile path detected');
-        findActiveLink('.nav-link', 'Profil', '.bi-person-circle');
-    }
 
-    // Logic untuk question numbers
-    const urlParams = new URLSearchParams(window.location.search);
-    const currentPage = urlParams.get('page') || 1;
-    const questionLinks = document.querySelectorAll('.question-number');
-    
-    questionLinks.forEach((link) => {
-        const answered = localStorage.getItem(`quest${link.textContent}`);
-        const questionNumber = parseInt(link.textContent);
-        
-        if (questionNumber == currentPage || answered) {
-            link.classList.add('active');
-        }
-    });
-});
-</script>

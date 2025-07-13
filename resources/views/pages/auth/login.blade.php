@@ -79,44 +79,8 @@
         </div>
     </div>
 </div>
-
-<style>
-    /* Tambahan style khusus login */
-    .card {
-        border-radius: 10px;
-        overflow: hidden;
-        border: none;
-    }
-    
-    .card-header {
-        border-bottom: none;
-    }
-    
-    .form-control {
-        border: 1px solid rgba(106, 13, 173, 0.3);
-        padding: 10px 15px;
-    }
-    
-    .form-control:focus {
-        border-color: var(--purple-primary);
-        box-shadow: 0 0 0 0.25rem rgba(106, 13, 173, 0.25);
-    }
-    
-    .btn-purple {
-        background-color: var(--purple-primary);
-        border: none;
-        padding: 10px;
-        font-weight: 500;
-        color: white;
-      }
-      
-      .btn-purple:hover {
-        background-color: var(--purple-dark);
-        color: white;
-    }
-    
-    .text-purple {
-        color: black;
-    }
-</style>
 @endsection
+
+@push('styles')
+<link rel="stylesheet" href="{{ asset('css/login.min.css') }}">
+@endpush

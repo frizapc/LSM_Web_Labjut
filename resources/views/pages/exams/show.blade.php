@@ -41,7 +41,7 @@
                             @endphp
                             @foreach($questions[0]->options as $index => $option)
                             <div class="form-check p-0 mb-0 d-flex justify-between align-items-center border border-opacity-75 border-secondary rounded-2"> 
-                              <div class="alphabet-section d-flex rounded-circle align-items-center m-3"  style="width: 30px; height: 30px;">
+                              <div class="alphabet-section d-flex rounded-circle align-items-center m-3">
                                   <span class="fw-bold mx-auto">{{ $alphabet[$index] }}</span>
                               </div>
                               <input 
@@ -82,149 +82,30 @@
                 </form>
             @else
                 <div class="text-center py-5">
-                    <i class="bi bi-journal-x text-purple" style="font-size: 3rem;"></i>
+                    <i class="bi bi-journal-x text-purple"></i>
                     <h5 class="text-purple mt-3">Belum ada soal tersedia</h5>
                 </div>
             @endif
         </div>
     </div>
 </div>
-
-<style>
-  .question-card {
-      background-color: rgba(106, 13, 173, 0.05);
-      border-color: rgba(106, 13, 173, 0.2);
-  }
-  .form-check-input:checked {
-      background-color: #6a0dad;
-      border-color: #6a0dad;
-  }
-  .progress-bar {
-      transition: width 0.3s ease;
-  }
-  .option-item {
-      margin-bottom: 1rem;
-  }
-  .option-item label {
-      display: flex;
-      align-items: center;
-      padding: 1rem;
-      border: 2px solid #dee2e6;
-      border-radius: 0.5rem;
-      cursor: pointer;
-  }
-  .option-letter {
-      font-weight: bold;
-      color: #6a0dad;
-      margin-right: 1rem;
-      font-size: 1.2rem;
-  }
-  input:checked + label {
-      background-color: #6a0dad;
-      color: #dee2e6;
-      font-weight: bold;
-  }
-  .form-check.selected .alphabet-section {
-    background-color: #6a0dad;
-    color: white;
-  }
-</style>
-
-<script>
-document.addEventListener('DOMContentLoaded', () => {
-    let answered = localStorage.getItem(
-        "quest{{ $questions->currentPage() }}"
-    );
-
-    if(answered){
-        let radio = document.getElementById(`option_${answered}`);
-        radio.checked = true;
-        radio.closest('.form-check').classList.add('selected');
-
-    }
-
-    const finishBtn = document.getElementById('finish-btn');
-    if(finishBtn){
-        finishBtn.addEventListener('click', () => {
-            fetch("{{ route('courses.exams.finish', [$course->id, $exam->id]) }}",{
-                method: 'GET',
-                headers: {
-                    'X-CSRF-TOKEN': '{{ csrf_token() }}'
-                }
-            })
-            .then(response => {
-                localStorage.clear();
-                clearInterval(timer);
-                if (response.redirected) {
-                    window.location.href = response.url;
-                }
-            })
-            .catch(error => console.error('Logout error:', error));
-        });
-    }
-})
-
-document.querySelectorAll('input[type="radio"][name="answer"]').forEach((radio) => {
-    radio.addEventListener('change', () => {
-        document.querySelectorAll('.form-check').forEach((el) => el.classList.remove('selected'));
-        if (radio.checked) {
-            radio.closest('.form-check').classList.add('selected');
-        }
-        fetch("{{ route('courses.exams.submit', [$course->id, $exam->id]) }}", {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json',
-                'X-CSRF-TOKEN': '{{ csrf_token() }}'
-            },
-            body: JSON.stringify({
-                answer: radio.value,
-            })
-        })
-        .then(response => response.json())
-        .then(data => {
-            localStorage.setItem("quest{{ $questions->currentPage() }}", data.answered);
-            console.log(data);
-            console.log('Jawaban disimpan!');
-        })
-        .catch(error => console.error('Gagal menyimpan jawaban:', error));
-    });
-});
-
-let remainingSeconds = parseInt("{{ $timeLeft }}") ;
-const icon = document.querySelector('.bi-clock'); 
-const textNode = icon.nextSibling;
-const updateTimer = () => {
-    if (remainingSeconds <= 0) {
-        textNode.nodeValue = "00:00";
-
-        fetch("{{ route('courses.exams.finish', [$course->id, $exam->id]) }}", {
-            method: 'GET',
-            headers: {
-                'X-CSRF-TOKEN': '{{ csrf_token() }}'
-            }
-        })
-        .then(response => {
-            localStorage.clear();
-            clearInterval(timer);
-            if (response.redirected) {
-                window.location.href = response.url;
-            }
-        })
-        .catch(error => console.error('Logout error:', error));
-        
-        return;
-    }
-
-    const minutes = Math.floor(remainingSeconds / 60);
-    const seconds = remainingSeconds % 60;
-    
-    textNode.nodeValue = 
-        `${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`;
-    
-    remainingSeconds--;
-};
-const timer = setInterval(updateTimer, 1000);
-updateTimer();
-</script>
-
 @endsection
+
+@push('styles')
+<link rel="stylesheet" href="{{ asset('css/exams-show.min.css') }}">
+@endpush
+
+@push('scripts')
+<script>
+    window._APP_DATA = {
+        courseId: "{{ $course->id }}",
+        examId: "{{ $exam->id }}",
+        currentPage: "{{ $questions->currentPage() }}",
+        csrfToken: "{{ csrf_token() }}",
+        timeLeft: "{{ $timeLeft }}",
+        submitUrl: "{{ route('courses.exams.submit', [$course->id, $exam->id]) }}",
+        finishUrl: "{{ route('courses.exams.finish', [$course->id, $exam->id]) }}"
+    };
+</script>
+<script src="{{ asset('js/exams-show.min.js') }}"></script>
+@endpush

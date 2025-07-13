@@ -1,0 +1,38 @@
+.course-detail{
+    max-height: 300px;
+    width: auto;
+}
+.course-detail > img {
+    max-height: 250px;
+}
+.bi-person-check-fill{
+    font-size: 1.5rem;
+}
+.bi-journal-x, .bi-clipboard2-x{
+    font-size: 3rem;
+}
+.bg-purple-light {
+    background-color: rgba(106, 13, 173, 0.1);
+}
+.text-purple {
+    color: #6a0dad;
+}
+.btn-purple {
+    background-color: #6a0dad;
+    color: white;
+}
+.btn-outline-purple {
+    border-color: #6a0dad;
+    color: #6a0dad;
+}
+.btn-outline-purple:hover {
+    background-color: #6a0dad;
+    color: white;
+}
+.progress {
+    height: 8px;
+    background-color: rgba(106, 13, 173, 0.2);
+}
+.progress-bar{
+    width: 30%
+}

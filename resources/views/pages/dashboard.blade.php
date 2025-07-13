@@ -20,7 +20,7 @@
                             <p class="text-muted mb-0">Kursus yang sedang Anda ikuti</p>
                         </div>
                         <div class="bg-purple-light rounded p-3">
-                            <i class="bi bi-book-half text-purple" style="font-size: 2rem;"></i>
+                            <i class="bi bi-book-half text-purple"></i>
                         </div>
                     </div>
                 </div>
@@ -47,7 +47,7 @@
                             <p class="text-muted mb-0">Nilai ujian Pemrograman Dasar</p>
                         </div>
                         <div class="bg-warning-light rounded p-3">
-                            <i class="bi bi-clipboard-data text-warning" style="font-size: 2rem;"></i>
+                            <i class="bi bi-clipboard-data text-warning"></i>
                         </div>
                     </div>
                 </div>
@@ -68,13 +68,13 @@
                         <div class="flex-grow-1">
                             <h5 class="text-success mb-0">Progress Belajar</h5>
                             <div class="display-4 fw-bold text-success">72<span class="fs-3">%</span></div>
-                            <div class="progress mt-2" style="height: 8px;">
-                                <div class="progress-bar bg-success" role="progressbar" style="width: 72%"></div>
+                            <div class="progress mt-2">
+                                <div class="progress-bar bg-success" role="progressbar"></div>
                             </div>
                             <p class="text-muted mb-0 mt-1">Kursus Pemrograman Web</p>
                         </div>
                         <div class="bg-success-light rounded p-3">
-                            <i class="bi bi-graph-up text-success" style="font-size: 2rem;"></i>
+                            <i class="bi bi-graph-up text-success"></i>
                         </div>
                     </div>
                 </div>
@@ -98,12 +98,12 @@
                 @foreach($courses as $course)
                 <div class="col-md-4 mb-4">
                     <div class="card h-100 border-purple-light">
-                        <div class="card-img-top bg-purple-light" style="height: 120px; overflow: hidden;">
+                        <div class="card-img-top bg-purple-light">
                             @if($course->photo)
                                 <img src="{{ asset('storage/'.$course->photo) }}" class="w-100 h-100 object-fit-cover" alt="{{ $course->name }}">
                             @else
                                 <div class="d-flex align-items-center justify-content-center h-100 text-purple">
-                                    <i class="bi bi-journal-bookmark" style="font-size: 3rem;"></i>
+                                    <i class="bi bi-journal-bookmark"></i>
                                 </div>
                             @endif
                         </div>
@@ -159,22 +159,8 @@
         </div>
     </div>
 </div>
-
-<style>
-    .border-purple-light {
-        border-color: rgba(106, 13, 173, 0.2);
-    }
-    .bg-purple-light {
-        background-color: rgba(106, 13, 173, 0.1);
-    }
-    .bg-warning-light {
-        background-color: rgba(255, 193, 7, 0.1);
-    }
-    .bg-success-light {
-        background-color: rgba(25, 135, 84, 0.1);
-    }
-    .border-start-lg {
-        border-left-width: 4px !important;
-    }
-</style>
 @endsection
+
+@push('styles')
+<link rel="stylesheet" href="{{ asset('css/dashboard.min.css') }}">
+@endpush

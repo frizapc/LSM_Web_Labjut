@@ -57,7 +57,7 @@
                         <div class="invalid-feedback">{{ $message }}</div>
                     @enderror
                     <div class="mt-2">
-                        <img id="image-preview" src="#" alt="Preview" class="img-thumbnail d-none" style="max-height: 200px;">
+                        <img id="image-preview" src="#" alt="Preview" class="img-thumbnail d-none" >
                     </div>
                 </div>
                 
@@ -73,25 +73,12 @@
         </div>
     </div>
 </div>
-
-<!-- JavaScript untuk preview gambar -->
-<script>
-    document.getElementById('photo').addEventListener('change', function(e) {
-        const preview = document.getElementById('image-preview');
-        const file = e.target.files[0];
-        
-        if (file) {
-            const reader = new FileReader();
-            
-            reader.onload = function(e) {
-                preview.src = e.target.result;
-                preview.classList.remove('d-none');
-            }
-            
-            reader.readAsDataURL(file);
-        } else {
-            preview.classList.add('d-none');
-        }
-    });
-</script>
 @endsection
+
+@push('styles')
+<link rel="stylesheet" href="{{ asset('css/courses-create.min.css') }}">
+@endpush
+
+@push('scripts')
+<script src="{{ asset('js/courses-create.min.js') }}"></script>
+@endpush

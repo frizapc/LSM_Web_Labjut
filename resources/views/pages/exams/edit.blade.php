@@ -20,7 +20,7 @@
         </div>
     @endif
 
-    <div class="card shadow border-0" style="min-height: 200px; overflow-y: auto;">
+    <div class="card shadow border-0">
         <div class="card-header bg-purple text-white">
             <h5 class="mb-0">
                 <i class="bi bi-pencil-square me-2"></i>Edit Ujian {{ $exam->name }}
@@ -98,7 +98,7 @@
         <div class="card-body">
             @if($exam->questions->isEmpty())
                 <div class="text-center py-4">
-                    <i class="bi bi-journal-x text-purple" style="font-size: 3rem;"></i>
+                    <i class="bi bi-journal-x text-purple"></i>
                     <h5 class="text-purple mt-3">Belum ada soal tersedia</h5>
                 </div>
             @else
@@ -175,44 +175,17 @@
     </div>
 
     <!-- Delete Form (Hidden) -->
-    <form id="deleteQuestionForm" method="POST" style="display: none;">
+    <form id="deleteQuestionForm" method="POST">
         @csrf
         @method('DELETE')
     </form>
 </div>
-
-<style>
-    .form-check-input:checked {
-        background-color: #6a0dad;
-        border-color: #6a0dad;
-    }
-    .bg-purple-light {
-        background-color: rgba(106, 13, 173, 0.1);
-    }
-    .border-purple-light {
-        border-color: rgba(106, 13, 173, 0.2);
-    }
-    .accordion-button:not(.collapsed) {
-        background-color: rgba(106, 13, 173, 0.2);
-        color: #6a0dad;
-    }
-</style>
-
-<script>
-    document.addEventListener('DOMContentLoaded', function() {
-        const isActiveCheckbox = document.getElementById('is_active');
-        isActiveCheckbox.addEventListener('change', function() {
-            this.value = this.checked ? '1' : '0';
-        });
-    });
-
-    function confirmDelete(ids) {
-        if (confirm('Apakah Anda yakin ingin menghapus soal ini?')) {
-            const form = document.getElementById('deleteQuestionForm');
-            form.action = `/courses/${ids[0]}/exams/${ids[1]}/questions/${ids[2]}`;
-            form.submit();
-        }
-    }
-</script>
-
 @endsection
+
+@push('styles')
+<link rel="stylesheet" href="{{ asset('css/exams-edit.min.css') }}">
+@endpush
+
+@push('scripts')
+<script src="{{ asset('js/exams-edit.min.js') }}"></script>
+@endpush

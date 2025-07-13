@@ -4,7 +4,7 @@
 
 @section('content')
 <div class="container-fluid py-4">
-    <div class="card shadow border-0" style="min-height: 200px; overflow-y: auto;">
+    <div class="card shadow border-0">
         <div class="card-header bg-purple text-white">
             <h5 class="mb-0">
                 <i class="bi bi-plus-circle me-2"></i>Tambah Ujian {{ $course->name }}
@@ -47,11 +47,4 @@
         </div>
     </div>
 </div>
-
-<style>
-    .form-check-input:checked {
-        background-color: #6a0dad;
-        border-color: #6a0dad;
-    }
-</style>
 @endsection

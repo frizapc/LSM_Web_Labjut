@@ -57,7 +57,7 @@
                     <!-- Preview Foto Sebelumnya -->
                     <div class="mb-2">
                         <p class="small text-muted">Foto Saat Ini:</p>
-                        <img src="{{ Storage::url($course->photo) }}" alt="Current Photo" class="img-thumbnail" style="max-height: 200px;">
+                        <img src="{{ Storage::url($course->photo) }}" alt="Current Photo" class="img-thumbnail">
                     </div>
                     
                     <input type="file" class="form-control border-purple @error('photo') is-invalid @enderror" 
@@ -69,7 +69,7 @@
                     
                     <!-- Preview Foto Baru -->
                     <div class="mt-2">
-                        <img id="image-preview" src="#" alt="Preview" class="img-thumbnail d-none" style="max-height: 200px;">
+                        <img id="image-preview" src="#" alt="Preview" class="img-thumbnail d-none">
                     </div>
                 </div>
                 
@@ -85,43 +85,12 @@
         </div>
     </div>
 </div>
-
-<!-- JavaScript untuk preview gambar -->
-<script>
-    document.getElementById('photo').addEventListener('change', function(e) {
-        const preview = document.getElementById('image-preview');
-        const file = e.target.files[0];
-        
-        if (file) {
-            // Cek apakah label preview sudah ada
-            let previewLabel = preview.previousElementSibling;
-            
-            // Buat label jika belum ada
-            if (!previewLabel || !previewLabel.classList.contains('preview-label')) {
-                previewLabel = document.createElement('p');
-                previewLabel.className = 'small text-muted preview-label';
-                previewLabel.textContent = 'Preview Foto Baru:';
-                preview.parentNode.insertBefore(previewLabel, preview);
-            }
-            
-            // Tampilkan label
-            previewLabel.classList.remove('d-none');
-            
-            // Proses preview gambar
-            const reader = new FileReader();
-            reader.onload = function(e) {
-                preview.src = e.target.result;
-                preview.classList.remove('d-none');
-            }
-            reader.readAsDataURL(file);
-        } else {
-            // Sembunyikan label dan preview jika tidak ada file
-            const previewLabel = preview.previousElementSibling;
-            if (previewLabel && previewLabel.classList.contains('preview-label')) {
-                previewLabel.classList.add('d-none');
-            }
-            preview.classList.add('d-none');
-        }
-    });
-</script>
 @endsection
+
+@push('styles')
+<link rel="stylesheet" href="{{ asset('css/courses-edit.min.css') }}">
+@endpush
+
+@push('scripts')
+<script src="{{ asset('js/courses-edit.min.js') }}"></script>
+@endpush

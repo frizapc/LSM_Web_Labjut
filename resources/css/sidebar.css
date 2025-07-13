@@ -1,0 +1,28 @@
+.question-numbers {
+        padding: 0.5rem;
+    }
+    
+    .question-number {
+        width: 40px;
+        height: 40px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        margin: 0.25rem;
+        background-color: rgba(255, 255, 255, 0.1);
+        transition: all 0.2s;
+    }
+    
+    .question-number:hover {
+        background-color: rgba(255, 255, 255, 0.2);
+    }
+    
+    .question-number.active {
+        background-color: #6a0dad;
+        color: white;
+        font-weight: bold;
+    }
+
+    .account-set{
+        margin-bottom: 4.2rem;
+    }
