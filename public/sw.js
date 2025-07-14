@@ -1,8 +1,6 @@
 const CACHE_NAME = "offline-v1";
 
 const filesToCache = [
-    "/",
-    "/offline.html",
     "/css/bootstrap.min.css",
     "/icons/bootstrap-icons.min.css",
     "/js/bootstrap.bundle.min.js",
@@ -43,22 +41,7 @@ self.addEventListener("fetch", function (event) {
 
     // Untuk HTML pages → Network First
     if (request.headers.get("accept")?.includes("text/html")) {
-        event.respondWith(
-            fetch(request)
-                .then((response) => {
-                    // Simpan ke cache
-                    return caches.open(CACHE_NAME).then((cache) => {
-                        cache.put(request, response.clone());
-                        return response;
-                    });
-                })
-                .catch(() => {
-                    // Jika gagal, ambil dari cache
-                    return caches.match(request).then((cached) => {
-                        return cached || caches.match("/offline.html");
-                    });
-                })
-        );
+        console.log('skip');
     } else {
         // Untuk asset lainnya → Cache First
         event.respondWith(
@@ -74,7 +57,6 @@ self.addEventListener("fetch", function (event) {
                             return networkResponse;
                         });
                     })
-                    .catch(() => caches.match("/offline.html"));
             })
         );
     }

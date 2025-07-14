@@ -60,6 +60,7 @@ Route::middleware(['auth', 'EnsureKeepExam'])
 
         Route::get('/reports', [ReportController::class, 'index'])
             ->name('reports.index');
-});
+    });
 
 // user resource untuk admin
+// Reset Score pada page laporan

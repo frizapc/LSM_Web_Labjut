@@ -53,18 +53,16 @@ class CourseController extends Controller
     /**
      * Display the specified resource.
      */
-    public function show(string $id)
+    public function show(Course $course)
     {
-        $course = Course::findOrFail($id);
         return view('pages.courses.show', compact('course'));
     }
 
     /**
      * Show the form for editing the specified resource.
      */
-    public function edit(string $id)
+    public function edit(Course $course)
     {
-        $course = Course::findOrFail($id);
         Gate::authorize('update', $course);
         return view('pages.courses.edit', compact('course'));
     }
@@ -72,10 +70,8 @@ class CourseController extends Controller
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, string $id)
-    {
-        $course = Course::findOrFail($id);
-
+    public function update(Request $request, Course $course)
+    {   
         $request->validate([
             'name' => 'required|string|max:50|unique:courses,name,'.$course->id,
             'level' => 'required|string',
@@ -98,9 +94,8 @@ class CourseController extends Controller
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(string $id)
+    public function destroy(Course $course)
     {
-        $course = Course::findOrFail($id);
         Gate::authorize('delete', $course);
         $course->delete();
         return redirect()
@@ -108,3 +103,4 @@ class CourseController extends Controller
             ->with('success', 'Kursus berhasil dihapus');
     }
 }
+  

@@ -14,7 +14,8 @@ class CourseObserver
     public function creating(Course $course): void
     {
         $course->code = 'kursus-' . Str::random(6);
-        $course->photo = $course->photo->store('courses');
+        $filename = uniqid('course_') . '.' . $course->photo->extension();
+        $course->photo = $course->photo->storeAs('courses', $filename);
     }
 
     /**
@@ -24,7 +25,8 @@ class CourseObserver
     {
         if ($course->photo) {
             Storage::delete($course->getOriginal('photo'));
-            $course->photo = $course->photo->store('courses');
+            $filename = uniqid('course_') . '.' . $course->photo->extension();
+            $course->photo = $course->photo->storeAs('courses', $filename);
         } else {
             $course->photo = $course->getOriginal('photo');
         }

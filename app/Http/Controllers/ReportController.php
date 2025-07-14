@@ -15,7 +15,7 @@ class ReportController extends Controller
                       $q->with('user')
                         ->orderBy('created_at', 'desc');
                   }]);
-        }])->get();
+        }])->paginate(5);
 
         return view('pages.reports.index', compact('courses'));
     }

@@ -108,6 +108,9 @@
                     </div>
                     @endforeach
                 </div>
+                <div class="mt-4">
+                    {{ $courses->links() }}
+                </div>
             @endif
         </div>
     </div>

@@ -12,7 +12,8 @@ class MaterialObserver
      */
     public function creating(Material $material): void
     {
-        $material->source = $material->source->store('materials');
+        $filename = uniqid('material_') . '.' . $material->source->extension();
+        $material->source = $material->source->storeAs('materials', $filename);
     }
 
     /**
@@ -22,7 +23,8 @@ class MaterialObserver
     {
         if ($material->source) {
             Storage::delete($material->getOriginal('source'));
-            $material->source = $material->source->store('materials');
+            $filename = uniqid('material_') . '.' . $material->source->extension();
+            $material->source = $material->source->storeAs('materials', $filename);
         } else {
             $material->source = $material->getOriginal('source');
         }
