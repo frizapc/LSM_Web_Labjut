@@ -13,6 +13,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\Gate;
 use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Str;
 
 class ExamController extends Controller
 {
@@ -56,7 +57,6 @@ class ExamController extends Controller
     public function show(Request $request,  $courseId, $examId)
     {
         $course = Course::findOrFail($courseId);
-
         $exam = Exam::whereBelongsTo($course)
         ->findOrFail($examId);
         
@@ -78,7 +78,7 @@ class ExamController extends Controller
             ->pluck('id')
             ->toArray();
 
-        $cacheName = "exam_{$exam->id}_user_{$user->id}_shuffled_ids";
+        $cacheName = $user->id."_".url()->current();
         session(['cacheName' => $cacheName]);
             
         $shuffledIds = Cache::remember(
@@ -216,7 +216,7 @@ class ExamController extends Controller
             $examId,
         );
 
-        Cache::forget("exam_{$examId}_user_{$user->id}_shuffled_ids");
+        Cache::forget($user->id."_".Str::before(url()->previous(), '?'));
 
         return redirect()
             ->route('courses.show', $courseId);

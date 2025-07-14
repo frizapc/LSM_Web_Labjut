@@ -1,0 +1,17 @@
+{
+    "name": "Miracle Sender",
+    "short_name": "MS-LMS",
+    "start_url": "/index.php",
+    "background_color": "#6a0dad",
+    "description": "Learning Management System",
+    "display": "fullscreen",
+    "theme_color": "#6a0dad",
+    "icons": [
+        {
+            "src": "miraclesender.jpg",
+            "sizes": "512x512",
+            "type": "image/jpg",
+            "purpose": "any maskable"
+        }
+    ]
+}

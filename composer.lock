@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "41afc78471180c9bb82f984288d50e3f",
+    "content-hash": "ed65e7225c3342265198f35a49a06126",
     "packages": [
         {
             "name": "brick/math",
@@ -5563,95 +5563,6 @@
             "time": "2024-12-21T16:25:41+00:00"
         },
         {
-            "name": "twbs/bootstrap",
-            "version": "v5.3.7",
-            "source": {
-                "type": "git",
-                "url": "https://github.com/twbs/bootstrap.git",
-                "reference": "e0032ae6a5a628a51a8552091816cec09b6434df"
-            },
-            "dist": {
-                "type": "zip",
-                "url": "https://api.github.com/repos/twbs/bootstrap/zipball/e0032ae6a5a628a51a8552091816cec09b6434df",
-                "reference": "e0032ae6a5a628a51a8552091816cec09b6434df",
-                "shasum": ""
-            },
-            "replace": {
-                "twitter/bootstrap": "self.version"
-            },
-            "type": "library",
-            "notification-url": "https://packagist.org/downloads/",
-            "license": [
-                "MIT"
-            ],
-            "authors": [
-                {
-                    "name": "Mark Otto",
-                    "email": "markdotto@gmail.com"
-                },
-                {
-                    "name": "Jacob Thornton",
-                    "email": "jacobthornton@gmail.com"
-                }
-            ],
-            "description": "The most popular front-end framework for developing responsive, mobile first projects on the web.",
-            "homepage": "https://getbootstrap.com/",
-            "keywords": [
-                "JS",
-                "css",
-                "framework",
-                "front-end",
-                "mobile-first",
-                "responsive",
-                "sass",
-                "web"
-            ],
-            "support": {
-                "issues": "https://github.com/twbs/bootstrap/issues",
-                "source": "https://github.com/twbs/bootstrap/tree/v5.3.7"
-            },
-            "time": "2025-06-10T15:44:49+00:00"
-        },
-        {
-            "name": "twbs/bootstrap-icons",
-            "version": "v1.13.1",
-            "source": {
-                "type": "git",
-                "url": "https://github.com/twbs/icons.git",
-                "reference": "ce0e49dd063243118a115f17ad1fe1fe7576d552"
-            },
-            "dist": {
-                "type": "zip",
-                "url": "https://api.github.com/repos/twbs/icons/zipball/ce0e49dd063243118a115f17ad1fe1fe7576d552",
-                "reference": "ce0e49dd063243118a115f17ad1fe1fe7576d552",
-                "shasum": ""
-            },
-            "type": "library",
-            "notification-url": "https://packagist.org/downloads/",
-            "license": [
-                "MIT"
-            ],
-            "authors": [
-                {
-                    "name": "Mark Otto",
-                    "email": "markdotto@gmail.com"
-                }
-            ],
-            "description": "Official open source SVG icon library for Bootstrap",
-            "homepage": "https://icons.getbootstrap.com/",
-            "keywords": [
-                "bootstrap",
-                "icon font",
-                "icons",
-                "svg"
-            ],
-            "support": {
-                "issues": "https://github.com/twbs/icons/issues",
-                "source": "https://github.com/twbs/icons/tree/v1.13.1"
-            },
-            "time": "2025-05-09T23:01:19+00:00"
-        },
-        {
             "name": "vlucas/phpdotenv",
             "version": "v5.6.2",
             "source": {
@@ -6055,43 +5966,37 @@
             "time": "2025-04-30T06:54:44+00:00"
         },
         {
-            "name": "laravel/breeze",
-            "version": "v2.3.7",
+            "name": "ladumor/laravel-pwa",
+            "version": "v0.0.5",
             "source": {
                 "type": "git",
-                "url": "https://github.com/laravel/breeze.git",
-                "reference": "73149b5d84be3881b2fdda94b2ad289e7905c1a4"
+                "url": "https://github.com/shailesh-ladumor/laravel-pwa.git",
+                "reference": "50613c526cae7f7637a73afe634a5423d745697c"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/laravel/breeze/zipball/73149b5d84be3881b2fdda94b2ad289e7905c1a4",
-                "reference": "73149b5d84be3881b2fdda94b2ad289e7905c1a4",
+                "url": "https://api.github.com/repos/shailesh-ladumor/laravel-pwa/zipball/50613c526cae7f7637a73afe634a5423d745697c",
+                "reference": "50613c526cae7f7637a73afe634a5423d745697c",
                 "shasum": ""
             },
             "require": {
-                "illuminate/console": "^11.0|^12.0",
-                "illuminate/filesystem": "^11.0|^12.0",
-                "illuminate/support": "^11.0|^12.0",
-                "illuminate/validation": "^11.0|^12.0",
-                "php": "^8.2.0",
-                "symfony/console": "^7.0"
-            },
-            "require-dev": {
-                "laravel/framework": "^11.0|^12.0",
-                "orchestra/testbench-core": "^9.0|^10.0",
-                "phpstan/phpstan": "^2.0"
+                "illuminate/support": ">=5.4",
+                "php": ">=5.6"
             },
             "type": "library",
             "extra": {
                 "laravel": {
+                    "aliases": {
+                        "LaravelPwa": "Ladumor\\LaravelPwa\\LaravelPwa"
+                    },
                     "providers": [
-                        "Laravel\\Breeze\\BreezeServiceProvider"
+                        "\\Ladumor\\LaravelPwa\\PWAServiceProvider"
                     ]
                 }
             },
             "autoload": {
                 "psr-4": {
-                    "Laravel\\Breeze\\": "src/"
+                    "Ladumor\\LaravelPwa\\": "src/"
                 }
             },
             "notification-url": "https://packagist.org/downloads/",
@@ -6100,20 +6005,28 @@
             ],
             "authors": [
                 {
-                    "name": "Taylor Otwell",
-                    "email": "taylor@laravel.com"
+                    "name": "Shailesh Ladumor",
+                    "email": "shaileshmladumor@gmail.com"
                 }
             ],
-            "description": "Minimal Laravel authentication scaffolding with Blade and Tailwind.",
+            "description": "this package used for the make pwa website.",
             "keywords": [
-                "auth",
-                "laravel"
+                "laravel",
+                "laravel-pwa",
+                "php",
+                "pwa-laravel"
             ],
             "support": {
-                "issues": "https://github.com/laravel/breeze/issues",
-                "source": "https://github.com/laravel/breeze"
+                "issues": "https://github.com/shailesh-ladumor/laravel-pwa/issues",
+                "source": "https://github.com/shailesh-ladumor/laravel-pwa/tree/v0.0.5"
             },
-            "time": "2025-06-17T13:07:20+00:00"
+            "funding": [
+                {
+                    "url": "https://www.buymeacoffee.com/ladumor",
+                    "type": "custom"
+                }
+            ],
+            "time": "2025-05-28T10:05:47+00:00"
         },
         {
             "name": "laravel/pail",

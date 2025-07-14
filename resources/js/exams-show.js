@@ -59,7 +59,6 @@ document.addEventListener("DOMContentLoaded", () => {
                             "quest" + data.currentPage,
                             result.answered
                         );
-                        console.log("Jawaban disimpan!", result);
                     })
                     .catch((error) =>
                         console.error("Gagal menyimpan jawaban:", error)
@@ -97,7 +96,6 @@ document.addEventListener("DOMContentLoaded", () => {
 
         const minutes = parseInt(Math.floor(remainingSeconds / 60));
         const seconds = remainingSeconds % 60;
-        console.log(minutes);
         textNode.nodeValue = `${minutes.toString().padStart(2, "0")}:${seconds
             .toString()
             .padStart(2, "0")}`;

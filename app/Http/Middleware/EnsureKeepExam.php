@@ -5,6 +5,7 @@ namespace App\Http\Middleware;
 use Closure;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Cache;
+use Illuminate\Support\Str;
 use Symfony\Component\HttpFoundation\Response;
 
 class EnsureKeepExam
@@ -19,7 +20,7 @@ class EnsureKeepExam
         $cacheKey = session('cacheName');
         
         if ($cacheKey && Cache::has($cacheKey)) {
-            return redirect()->back()
+            return redirect(Str::after($cacheKey, '_'))
                 ->with('warning', 'Tidak bisa logout, ujian sedang berlangsung!');
         }
 
