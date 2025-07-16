@@ -3,11 +3,12 @@
 namespace App\Http\Middleware;
 
 use App\Models\Course;
-use App\Models\Exam;
 use App\Models\SessionExam;
 use Closure;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\Gate;
+use Illuminate\Support\Str;
 use Symfony\Component\HttpFoundation\Response;
 
 class EnsurePreExam
@@ -21,28 +22,41 @@ class EnsurePreExam
     {
         $ability = Gate::allows('create', Course::class);
         $user = $request->user();
-        $examId = $request->exam;
-        $course = Course::findOrFail($request->course);
-        $exam = Exam::findOrFail($examId);
+        $cacheKey = $user->id."_".Str::before($request->url(), '/finish');
+        $cacheSession = session('cacheKey');
+
         $sessionExam = SessionExam::where([
             ['user_id', "=", $user->id],
-            ['exam_id', "=", $exam->id],
+            ['exam_id', "=", $request->exam->id],
         ])->first();
-
-        if($sessionExam){
-            if(!$exam->is_active || $sessionExam->is_finish){
-                return redirect()
-                    ->route('courses.show', $course->id)
-                    ->with('warning', 'Tidak dapat memulai ujian');
+        
+        if($cacheSession){
+            if($cacheSession != $cacheKey){
+                return redirect()->back();
             }
-        } elseif (!$exam->is_active || $ability){
+        }
+        
+        if($sessionExam){
+            if($sessionExam->is_finish){
+                Cache::forget($cacheKey);
+                session()->remove('cacheKey');
+                return redirect()
+                    ->route('courses.show', $request->course)
+                    ->with('warning', 'Kamu sudah mengerjakan ujian ini');
+            }
+            if(!$request->exam->is_active){
+                Cache::forget($cacheKey);
+                session()->remove('cacheKey');
+                return redirect()
+                    ->route('courses.show', $request->exam->course_id)
+                    ->with('warning', 'Ujian belum dibuka');
+            }
+        } elseif ($ability){
             return redirect()
-                    ->route('courses.show', $course->id)
+                    ->route('courses.show', $request->course_id)
                     ->with('warning', 'Tidak dapat memulai ujian');
         }
         
-        // $request->attributes->set('exam', $exam);
-
         return $next($request);
     }
 }

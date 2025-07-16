@@ -64,3 +64,4 @@ Route::middleware(['auth', 'EnsureKeepExam'])
 
 // user resource untuk admin
 // Reset Score pada page laporan
+// error pada function confirmDelete question

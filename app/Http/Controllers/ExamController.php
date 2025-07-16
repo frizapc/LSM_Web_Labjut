@@ -12,7 +12,6 @@ use App\Services\ExamScoringService;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\Gate;
-use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Str;
 
 class ExamController extends Controller
@@ -20,10 +19,9 @@ class ExamController extends Controller
     /**
      * Show the form for creating a new resource.
      */
-    public function create($courseId)
+    public function create(Course $course)
     {
         Gate::authorize('create', Course::class);
-        $course = Course::findOrFail($courseId);
         return view('pages.exams.create', [
             'course' => $course,
         ]);
@@ -32,9 +30,8 @@ class ExamController extends Controller
     /**
      * Store a newly created resource in storage.
      */
-    public function store(Request $request, $courseId)
+    public function store(Request $request, Course $course)
     {
-        Course::findOrFail($courseId);
         $request->validate([
             'name' => 'required|string|max:50',
             'note' => 'nullable|string',
@@ -43,58 +40,47 @@ class ExamController extends Controller
         Exam::create([
             'name' => $request->name,
             'note' => $request->note,
-            'course_id' => $courseId,
+            'course_id' => $course->id,
         ]);
 
         return redirect()
-            ->route('courses.show', $courseId)
+            ->route('courses.show', $course->id)
             ->with('success', 'Ujian baru berhasil ditambahkan!');
     }
 
     /**
      * Display the specified resource.
      */
-    public function show(Request $request,  $courseId, $examId)
+    public function show(Request $request, Course $course, Exam $exam)
     {
-        $course = Course::findOrFail($courseId);
-        $exam = Exam::whereBelongsTo($course)
-        ->findOrFail($examId);
-        
         $user = $request->user();
         
         $sessionExam = SessionExam::firstOrCreate(
         [
             'user_id' => $user->id,
-            'exam_id' => $examId,
+            'exam_id' => $exam->id,
         ],
         [
             'completed_at' => now()->addMinutes($exam->duration),
             ]
         );
             
-        $timeLeft = now()->diffInSeconds($sessionExam->completed_at);
-            
-        $questionIds = Question::where('exam_id', $exam->id)
-            ->pluck('id')
-            ->toArray();
+        $questions = Question::where('exam_id', $exam->id)->get();
+        $questionIds = $questions->pluck('id')->toArray();
 
-        $cacheName = $user->id."_".url()->current();
-        session(['cacheName' => $cacheName]);
+        $cacheKey = $user->id."_".$request->url();
+        session(['cacheKey' => $cacheKey]);
             
         $shuffledIds = Cache::remember(
-                $cacheName, 
-                now()->addMinutes($exam->duration), 
-                function () use ($questionIds) {
-            return collect($questionIds)
-            ->shuffle()
-            ->values()
-            ->all();
-        });
+            $cacheKey, 
+            now()->addMinutes($exam->duration), 
+            fn() => collect($questionIds)->shuffle()->values()->all()
+        );
 
         $currentPage = $request->get('page', 1);
         $currentQuestionId = $shuffledIds[$currentPage - 1] ?? null;
 
-        $question = Question::findOrFail($currentQuestionId);
+        $question = $questions->findOrFail($currentQuestionId);
 
         $questions = new \Illuminate\Pagination\LengthAwarePaginator(
             [$question],
@@ -104,6 +90,7 @@ class ExamController extends Controller
             ['path' => $request->url(), 'query' => $request->query()]
         );
 
+        $timeLeft = now()->diffInSeconds($sessionExam->completed_at);
 
         return view('pages.exams.show', [
             'course' => $course,
@@ -116,12 +103,9 @@ class ExamController extends Controller
     /**
      * Show the form for editing the specified resource.
      */
-    public function edit(string $courseId, $examId)
+    public function edit(Course $course, Exam $exam)
     {
-        $course = Course::findOrFail($courseId);
         Gate::authorize('update', $course);
-        $exam = Exam::whereBelongsTo($course)
-            ->findOrFail($examId);
 
         return view('pages.exams.edit', [
             'course' => $course,
@@ -132,9 +116,8 @@ class ExamController extends Controller
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, $courseId, $examId)
+    public function update(Request $request, Course $course, Exam $exam)
     {
-        $course = Course::findOrFail($courseId);
         $request->validate([
             'name' => 'required|string|max:255',
             'duration' => 'required|integer|min:1|max:120',
@@ -142,14 +125,12 @@ class ExamController extends Controller
             'is_active' => 'boolean',
         ]);
 
-        Exam::whereBelongsTo($course)
-            ->findOrFail($examId)
-            ->update([
-                'name' => $request->name,
-                'duration' => $request->duration,
-                'note' => $request->note,
-                'is_active' => $request->has('is_active'),
-            ]);
+        $exam->update([
+            'name' => $request->name,
+            'duration' => $request->duration,
+            'note' => $request->note,
+            'is_active' => $request->has('is_active'),
+        ]);
 
         return redirect()
             ->back()
@@ -159,66 +140,65 @@ class ExamController extends Controller
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(string $courseId, $examId)
+    public function destroy(Course $course, Exam $exam)
     {
-        $course = Course::findOrFail($courseId);
         Gate::authorize('delete', $course);
-        Exam::whereBelongsTo($course)
-            ->findOrFail($examId)
-            ->delete();
+        $exam->delete();
         return redirect()
-            ->route('courses.show', $courseId)
+            ->route('courses.show', $course->id)
             ->with('success', 'Ujian berhasil dihapus!');
     }
 
-    public function submit(Request $request, $courseId, $examId){
+    public function submit(Request $request, Course $course, Exam $exam){
         $user = $request->user();
-        $exam = Exam::findOrFail($examId);
-        $option = Option::findOrFail($request->answer);
 
-        if($option){
-            Answer::firstOrCreate([
-                'user_id' => $user->id,
-                'exam_id' => $exam->id,
-                'question_id' => $option->question_id,
-            ],[
-                'user_id' => $user->id,
-                'exam_id' => $exam->id,
-                'question_id' => $option->question_id,
-                'option_id' => $request->answer,
-            ])->update(['option_id' => $request->answer]);
-        } else {
-            Answer::where([
-                ['user_id', "=", $user->id],
-                ['question_id', "=", $option->question_id],
-            ])->delete();
+        if ($request->answer) {
+            $option = Option::findOrFail($request->answer);
+
+            Answer::updateOrCreate(
+                [
+                    'user_id' => $user->id,
+                    'exam_id' => $exam->id,
+                    'question_id' => $option->question_id,
+                ],
+                [
+                    'option_id' => $option->id,
+                ]
+            );
+
+            return response()->json([
+                'status' => 'saved',
+                'answered' => $option->id,
+            ]);
         }
 
         return response()->json([
             'status' => 'saved',
-            'question_id' => $option->question_id,
             'answered' => $request->answer,
         ]);
     }
 
-    public function finish(Request $request, $courseId, $examId)
+    public function finish(Request $request, Course $course, Exam $exam)
     {
         $user = $request->user();
-
+        
         SessionExam::where([
             ['user_id', $user->id],
-            ['exam_id', $examId]
+            ['exam_id', $exam->id]
         ])->update(['is_finish' => true]);
 
         ExamScoringService::calculate(
             $user->id, 
-            $courseId,
-            $examId,
-        );
+            $course->id,
+            $exam->id,
+        );    
 
-        Cache::forget($user->id."_".Str::before(url()->previous(), '?'));
+        $cacheKey = $user->id."_".Str::before($request->url(), '/finish');
+
+        Cache::forget($cacheKey);
+        session()->remove('cacheKey');
 
         return redirect()
-            ->route('courses.show', $courseId);
+            ->route('courses.show', $course->id);
     }
 }

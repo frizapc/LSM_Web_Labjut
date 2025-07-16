@@ -39,10 +39,13 @@ self.addEventListener("fetch", function (event) {
     // Abaikan permintaan non-HTTP (misalnya chrome-extension://)
     if (!request.url.startsWith("http")) return;
 
+    // Skip caching untuk endpoint finish exam
+    if (request.url.includes("/exams/") && request.url.includes("/finish")) {
+        return fetch(request);
+    }
+
     // Untuk HTML pages → Network First
-    if (request.headers.get("accept")?.includes("text/html")) {
-        console.log('skip');
-    } else {
+    if (!request.headers.get("accept")?.includes("text/html")) {
         // Untuk asset lainnya → Cache First
         event.respondWith(
             caches.match(request).then((cachedResponse) => {
@@ -50,13 +53,12 @@ self.addEventListener("fetch", function (event) {
                     return cachedResponse;
                 }
 
-                return fetch(request)
-                    .then((networkResponse) => {
-                        return caches.open(CACHE_NAME).then((cache) => {
-                            cache.put(request, networkResponse.clone());
-                            return networkResponse;
-                        });
-                    })
+                return fetch(request).then((networkResponse) => {
+                    return caches.open(CACHE_NAME).then((cache) => {
+                        cache.put(request, networkResponse.clone());
+                        return networkResponse;
+                    });
+                });
             })
         );
     }

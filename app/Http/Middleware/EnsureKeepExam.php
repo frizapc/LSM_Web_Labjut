@@ -17,8 +17,7 @@ class EnsureKeepExam
      */
     public function handle(Request $request, Closure $next): Response
     {
-        $cacheKey = session('cacheName');
-        
+        $cacheKey = session('cacheKey');
         if ($cacheKey && Cache::has($cacheKey)) {
             return redirect(Str::after($cacheKey, '_'))
                 ->with('warning', 'Tidak bisa logout, ujian sedang berlangsung!');
