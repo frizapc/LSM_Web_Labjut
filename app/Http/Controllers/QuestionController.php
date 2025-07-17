@@ -8,6 +8,7 @@ use App\Models\Option;
 use App\Models\Question;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Gate;
 
 class QuestionController extends Controller
 {
@@ -30,12 +31,13 @@ class QuestionController extends Controller
     /**
      * Store a newly created resource in storage.
      */
-    public function store($courseId, $examId)
+    public function store(Course $course, Exam $exam)
     {
-        Course::findOrFail($courseId);
-        Exam::findOrFail($examId);
+        Gate::authorize('create', Course::class);
+        Course::findOrFail($course->id);
+        Exam::findOrFail($exam->id);
         Question::create([
-            'exam_id' => $examId
+            'exam_id' => $exam->id
         ]);
 
         return redirect()
@@ -62,21 +64,22 @@ class QuestionController extends Controller
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, string $courseId, $examId, $questionId)
+    public function update(Request $request, Course $course, Exam $exam, $questionId)
     {
+        Gate::authorize('update', $course);
         $validated = $request->validate([
             'question_text' => 'nullable|string',
             'correct_option' => 'required|string',
         ]);
         
         try {
-            DB::transaction(function () use ($request, $validated, $courseId, $examId, $questionId) {
+            DB::transaction(function () use ($request, $validated, $course, $exam, $questionId) {
                 // Verifikasi relasi sekaligus
                 $question = Question::where([
                     ['id', "=", $questionId],
-                    ['exam_id', "=", $examId],
-                ])->whereHas('exam', function($q) use ($courseId) {
-                    $q->where('course_id', $courseId);
+                    ['exam_id', "=", $exam->id],
+                ])->whereHas('exam', function($q) use ($course) {
+                    $q->where('course_id', $course->id);
                 })->firstOrFail();
     
                 // Update pertanyaan
@@ -108,10 +111,9 @@ class QuestionController extends Controller
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(string $courseId, $examId, $questionId)
+    public function destroy(Course $course, Exam $exam, $questionId)
     {
-        Course::findOrFail($courseId);
-        Exam::findOrFail($examId);
+        Gate::authorize('create', Course::class);
         Question::findOrFail($questionId)
             ->delete();
 

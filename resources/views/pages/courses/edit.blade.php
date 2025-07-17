@@ -21,7 +21,7 @@
                     <div class="col-md-6">
                         <label for="name" class="form-label text-purple">Nama Kursus</label>
                         <input type="text" class="form-control border-purple @error('name') is-invalid @enderror" 
-                               id="name" name="name" value="{{ old('name', $course->name) }}" required>
+                               id="name" name="name" value="{{ old('name', $course->name) }}">
                         @error('name')
                             <div class="invalid-feedback">{{ $message }}</div>
                         @enderror
@@ -30,7 +30,7 @@
                     <div class="col-md-6">
                         <label for="level" class="form-label text-purple">Level</label>
                         <select class="form-select border-purple @error('level') is-invalid @enderror" 
-                                id="level" name="level" required>
+                                id="level" name="level">
                             <option value="" disabled>Pilih Level</option>
                             <option value="Pemula" {{ old('level', $course->level) == 'Pemula' ? 'selected' : '' }}>Pemula</option>
                             <option value="Menengah" {{ old('level', $course->level) == 'Menengah' ? 'selected' : '' }}>Menengah</option>

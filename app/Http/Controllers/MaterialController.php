@@ -12,21 +12,17 @@ class MaterialController extends Controller
     /**
      * Show the form for creating a new resource.
      */
-    public function create($courseId)
+    public function create(Course $course)
     {
-        $course = Course::findOrFail($courseId);
         Gate::authorize('create', Course::class);
-        return view('pages.materials.create', [
-            'course' => $course,
-        ]);
+        return view('pages.materials.create', compact('course'));
     }
 
     /**
      * Store a newly created resource in storage.
      */
-    public function store(Request $request, $courseId)
+    public function store(Request $request, Course $course)
     {
-        Course::findOrFail($courseId);
 
         $request->validate([
             'name' => 'required|string|max:50',
@@ -38,22 +34,20 @@ class MaterialController extends Controller
             'name' => $request->name,
             'description' => $request->description,
             'source' => $request->file('source'),
-            'course_id' => $courseId,
+            'course_id' => $course->id,
         ]);
 
         return redirect()
-            ->route('courses.show', $courseId)
+            ->route('courses.show', $course->id)
             ->with('success', 'Materi baru berhasil ditambahkan!');
     }
 
     /**
      * Show the form for editing the specified resource.
      */
-    public function edit($courseId, $materialId)
+    public function edit(Course $course, Material $material)
     {
-        $course = Course::findOrFail($courseId);
         Gate::authorize('update', $course);
-        $material = Material::findOrFail($materialId);
         return view('pages.materials.edit', [
             'course' => $course,
             'material' => $material,
@@ -63,11 +57,8 @@ class MaterialController extends Controller
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, $courseId, $materialId)
+    public function update(Request $request, Course $course, Material $material)
     {
-        Course::findOrFail($courseId);
-        $material = Material::findOrFail($materialId);
-
         $request->validate([
             'name' => 'required|string|max:50',
             'description' => 'nullable|string',
@@ -81,22 +72,19 @@ class MaterialController extends Controller
         ]);
 
         return redirect()
-            ->route('courses.show', $courseId)
+            ->route('courses.show', $course->id)
             ->with('success', 'Materi berhasil diperbarui!');
     }
 
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy($courseId, $materialId)
+    public function destroy(Course $course, Material $material)
     {
-        $course = Course::findOrFail($courseId);
         Gate::authorize('delete', $course);
-        Material::whereBelongsTo($course)
-            ->findOrFail($materialId)
-            ->delete();
+        $material->delete();
         return redirect()
-            ->route('courses.show', $courseId)
+            ->route('courses.show', $course->id)
             ->with('success', 'Materi berhasil dihapus!');
     }
 }

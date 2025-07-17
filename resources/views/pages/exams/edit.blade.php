@@ -103,7 +103,7 @@
                 </div>
             @else
                 <div class="accordion" id="questionsAccordion">
-                    @foreach($exam->questions as $question)
+                    @foreach($questions as $question)
                     <div class="accordion-item border-purple-light mb-3">
                         <h2 class="accordion-header" id="heading{{ $question->id }}">
                             <button class="accordion-button collapsed bg-purple-light text-purple" 
@@ -112,7 +112,7 @@
                                     data-bs-target="#collapse{{ $question->id }}" 
                                     aria-expanded="false" 
                                     aria-controls="collapse{{ $question->id }}">
-                                Soal #{{ $loop->iteration }}
+                                Soal #{{ ($questions->currentPage() - 1) * $questions->perPage() + $loop->iteration }}
                             </button>
                         </h2>
                         <div id="collapse{{ $question->id }}" 
@@ -155,30 +155,27 @@
                                             <i class="bi bi-save me-1"></i> Simpan Perubahan
                                         </button>
                                         <button type="button" 
-                                                class="btn btn-sm btn-outline-danger"
-                                                onclick="confirmDelete([
-                                                    '{{ $course->id }}',
-                                                    '{{ $exam->id  }}',
-                                                    '{{ $question->id }}',
-                                                ])">
+                                                class="btn btn-sm btn-outline-danger destroy-question-btn">
                                             <i class="bi bi-trash me-1"></i> Hapus Soal
                                         </button>
                                     </div>
                                 </form>
                             </div>
                         </div>
+                        <!-- Delete Form (Hidden) -->
+                        <form class="deleteQuestionForm" method="POST" action="{{ route('courses.exams.questions.destroy', [$course->id, $exam->id, $question->id]) }}">
+                            @csrf
+                            @method('DELETE')
+                        </form>
                     </div>
                     @endforeach
+                </div>
+                <div class="mt-4">
+                    {{ $questions->links() }}
                 </div>
             @endif
         </div>
     </div>
-
-    <!-- Delete Form (Hidden) -->
-    <form id="deleteQuestionForm" method="POST">
-        @csrf
-        @method('DELETE')
-    </form>
 </div>
 @endsection
 

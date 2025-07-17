@@ -22,9 +22,10 @@ class ProfileObserver
     {
         if ($user->photo) {
             Storage::delete($user->getOriginal('photo') ?: '');
-            $user->photo = $user->photo->store('profiles');
+            $filename = uniqid('profile_') . '.' . $user->photo->extension();
+            $user->photo = $user->photo->storeAs('profiles', $filename);
         } else {
-            $user->photo = $user->getOriginal('photo');
+            unset($user->photo);
         }
     }
 
