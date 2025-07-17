@@ -155,30 +155,24 @@
                                             <i class="bi bi-save me-1"></i> Simpan Perubahan
                                         </button>
                                         <button type="button" 
-                                                class="btn btn-sm btn-outline-danger"
-                                                onclick="confirmDelete([
-                                                    '{{ $course->id }}',
-                                                    '{{ $exam->id  }}',
-                                                    '{{ $question->id }}',
-                                                ])">
+                                                class="btn btn-sm btn-outline-danger destroy-question-btn">
                                             <i class="bi bi-trash me-1"></i> Hapus Soal
                                         </button>
                                     </div>
                                 </form>
                             </div>
                         </div>
+                        <!-- Delete Form (Hidden) -->
+                        <form class="deleteQuestionForm" method="POST" action="{{ route('courses.exams.questions.destroy', [$course->id, $exam->id, $question->id]) }}">
+                            @csrf
+                            @method('DELETE')
+                        </form>
                     </div>
                     @endforeach
                 </div>
             @endif
         </div>
     </div>
-
-    <!-- Delete Form (Hidden) -->
-    <form id="deleteQuestionForm" method="POST">
-        @csrf
-        @method('DELETE')
-    </form>
 </div>
 @endsection
 
