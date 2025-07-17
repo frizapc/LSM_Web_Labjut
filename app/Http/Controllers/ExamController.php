@@ -110,6 +110,7 @@ class ExamController extends Controller
         return view('pages.exams.edit', [
             'course' => $course,
             'exam' => $exam,
+            'questions' => $exam->questions()->paginate($perPage = 10, $columns = ['*'], $pageName = 'questions'),
         ]);
     }
 

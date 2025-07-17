@@ -3,7 +3,9 @@
 namespace App\Http\Controllers;
 
 use App\Models\Course;
+use App\Models\Score;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Gate;
 
 class ReportController extends Controller
 {
@@ -18,5 +20,12 @@ class ReportController extends Controller
         }])->paginate(5);
 
         return view('pages.reports.index', compact('courses'));
+    }
+
+    public function reset()
+    {
+        Gate::authorize('create', Course::class);
+        Score::truncate();
+        return redirect()->route('reports.index');
     }
 }

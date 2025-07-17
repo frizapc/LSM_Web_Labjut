@@ -60,8 +60,8 @@ Route::middleware(['auth', 'EnsureKeepExam'])
 
         Route::get('/reports', [ReportController::class, 'index'])
             ->name('reports.index');
+        Route::delete('/reports', [ReportController::class, 'reset'])
+            ->name('reports.reset');
     });
 
 // user resource untuk admin
-// Reset Score pada page laporan
-// error pada function confirmDelete question

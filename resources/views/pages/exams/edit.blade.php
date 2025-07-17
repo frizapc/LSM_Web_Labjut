@@ -103,7 +103,7 @@
                 </div>
             @else
                 <div class="accordion" id="questionsAccordion">
-                    @foreach($exam->questions as $question)
+                    @foreach($questions as $question)
                     <div class="accordion-item border-purple-light mb-3">
                         <h2 class="accordion-header" id="heading{{ $question->id }}">
                             <button class="accordion-button collapsed bg-purple-light text-purple" 
@@ -112,7 +112,7 @@
                                     data-bs-target="#collapse{{ $question->id }}" 
                                     aria-expanded="false" 
                                     aria-controls="collapse{{ $question->id }}">
-                                Soal #{{ $loop->iteration }}
+                                Soal #{{ ($questions->currentPage() - 1) * $questions->perPage() + $loop->iteration }}
                             </button>
                         </h2>
                         <div id="collapse{{ $question->id }}" 
@@ -169,6 +169,9 @@
                         </form>
                     </div>
                     @endforeach
+                </div>
+                <div class="mt-4">
+                    {{ $questions->links() }}
                 </div>
             @endif
         </div>

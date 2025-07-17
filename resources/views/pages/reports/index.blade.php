@@ -5,10 +5,19 @@
 @section('content')
 <div class="container-fluid py-4">
     <div class="card shadow border-0">
-        <div class="card-header bg-purple text-white">
+        <div class="card-header bg-purple text-white d-flex justify-content-between align-items-center">
             <h5 class="mb-0">
                 <i class="bi bi-bar-chart-line me-2"></i>Laporan Hasil Ujian
             </h5>
+            @can('create', App\Models\Course::class)
+            <form action="{{ route('reports.reset') }}" method="POST" onsubmit="return confirm('Data yang dihapus tidak dapat dikembalikan!')">
+                @csrf
+                @method('DELETE')
+                <button class="btn btn-sm btn-danger" type="submit">
+                    <i class="bi bi-arrow-counterclockwise me-1"></i> Reset
+                </button>
+            </form>
+            @endcan
         </div>
         
         <div class="card-body">
