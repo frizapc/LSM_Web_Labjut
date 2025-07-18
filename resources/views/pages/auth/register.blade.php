@@ -48,16 +48,21 @@
 
                         <div class="mb-3">
                             <label for="password" class="form-label text-purple">Password</label>
-                            <input id="password" type="password" 
-                                   class="form-control @error('password') is-invalid @enderror" 
-                                   name="password"  
-                                   autocomplete="new-password">
-
-                            @error('password')
-                                <div class="invalid-feedback">
-                                    {{ $message }}
-                                </div>
-                            @enderror
+                            <div class="input-group">
+                                <input id="password" type="password" 
+                                       class="form-control @error('password') is-invalid @enderror" 
+                                       name="password"  
+                                       autocomplete="new-password">
+                                <button class="btn btn-outline-secondary" type="button" id="togglePassword">
+                                    <i class="bi bi-eye-slash" id="toggleIcon"></i>
+                                </button>
+    
+                                @error('password')
+                                    <div class="invalid-feedback">
+                                        {{ $message }}
+                                    </div>
+                                @enderror
+                            </div>
                         </div>
 
                         <div class="mb-3">
@@ -89,4 +94,8 @@
 
 @push('styles')
 <link rel="stylesheet" href="{{ asset('css/register.min.css') }}">
+@endpush
+
+@push('scripts')
+<script src="{{ asset('js/register.min.js') }}"></script>
 @endpush
