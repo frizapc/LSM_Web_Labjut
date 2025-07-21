@@ -34,8 +34,9 @@ class QuestionController extends Controller
     public function store(Course $course, Exam $exam)
     {
         Gate::authorize('create', Course::class);
-        Course::findOrFail($course->id);
-        Exam::findOrFail($exam->id);
+        if ($exam->course_id !== $course->id) {
+            abort(404);
+        }
         Question::create([
             'exam_id' => $exam->id
         ]);
@@ -74,13 +75,16 @@ class QuestionController extends Controller
         
         try {
             DB::transaction(function () use ($request, $validated, $course, $exam, $questionId) {
-                // Verifikasi relasi sekaligus
-                $question = Question::where([
-                    ['id', "=", $questionId],
-                    ['exam_id', "=", $exam->id],
-                ])->whereHas('exam', function($q) use ($course) {
-                    $q->where('course_id', $course->id);
-                })->firstOrFail();
+                // Ambil question beserta exam-nya
+                $question = Question::with('exam', 'options')->findOrFail($questionId);
+
+                // Validasi relasi antar model
+                if (
+                    $question->exam_id != $exam->id ||
+                    $question->exam->course_id != $course->id
+                ) {
+                    abort(404);
+                }
     
                 // Update pertanyaan
                 $question->update(['question_text' => $validated['question_text']]);
@@ -111,11 +115,13 @@ class QuestionController extends Controller
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(Course $course, Exam $exam, $questionId)
+    public function destroy(Course $course, Exam $exam, Question $question)
     {
         Gate::authorize('create', Course::class);
-        Question::findOrFail($questionId)
-            ->delete();
+        if ($exam->course_id != $course->id) {
+            abort(404);
+        }
+        $question->delete();
 
         return redirect()
             ->back()
